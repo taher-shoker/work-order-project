@@ -1,0 +1,209 @@
+<section class="add-view-order">
+    <div class="my-4">
+        <div class="row">
+            <div class="col">
+                <div class="p-4">
+                    <div class="row align-items-center">
+                        <div class="col-md-6">
+                            <div class="title mb-2">
+                                <p><a routerLink="/dashboard/admin/devices">{{'devices.devices' | translate}}</a> >>
+                                    <span>{{ isUpdatePage ? ('devices.edit_device' | translate) : ('devices.add_device'
+                                        | translate) }}</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <form [formGroup]="deviceForm" (ngSubmit)="onSubmit(deviceForm)">
+                        <h3>{{'devices.add_New_device' | translate}}</h3>
+                        <div class="row all-orders">
+                            <!-- name_ar -->
+                            <div class="col-md-4" *ngIf="currentLang == 'ar'">
+                                <mat-form-field appearance="fill" class="w-100"
+                                    [hideRequiredMarker]="hideRequiredMarker">
+                                    <mat-label> {{'devices.name_ar' | translate}}</mat-label>
+                                    <input formControlName="name_ar" matInput
+                                        placeholder="{{'devices.name_ar' | translate}}" />
+                                    <mat-error *ngIf="deviceForm.controls.name_ar.hasError('required')">
+                                        {{'devices.name_ar' | translate}} {{'required' | translate}}
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <!-- name_en -->
+                            <div class="col-md-4" *ngIf="currentLang == 'en'">
+                                <mat-form-field appearance="fill" class="w-100"
+                                    [hideRequiredMarker]="hideRequiredMarker">
+                                    <mat-label> {{'devices.name_en' | translate}}</mat-label>
+                                    <input formControlName="name_en" matInput
+                                        placeholder="{{'devices.name_en' | translate}}" />
+                                    <mat-error *ngIf="deviceForm.controls.name_en.hasError('required')">
+                                        {{'devices.name_en' | translate}} {{'required' | translate}}
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <!--  device_type -->
+                            <div class="col-md-4">
+                                <mat-form-field class="w-100" [hideRequiredMarker]="hideRequiredMarker">
+                                    <mat-label>{{'devices.device_type' | translate}}</mat-label>
+                                    <mat-select [(value)]="typeId" formControlName="type_id">
+                                        <mat-option *ngFor="let item of deviceTypes" [value]="item.id">
+                                            <span *ngIf="currentLang == 'ar'">{{item?.name_ar}}</span>
+                                            <span *ngIf="currentLang == 'en'">{{item?.name_en}}</span>
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <!-- code_number-->
+                            <div class="col-md-4">
+                                <mat-form-field appearance="fill" class="w-100"
+                                    [hideRequiredMarker]="hideRequiredMarker">
+                                    <mat-label> {{'devices.code' | translate}}</mat-label>
+                                    <input formControlName="model_code" matInput
+                                        placeholder="{{'devices.code_number' | translate}}" />
+                                </mat-form-field>
+                            </div>
+                            <!--  Department -->
+                            <div class="col-md-4">
+                                <mat-form-field class="w-100" [hideRequiredMarker]="hideRequiredMarker">
+                                    <mat-label>{{'devices.department' | translate}}</mat-label>
+                                    <mat-select [(value)]="departmentId" formControlName="department_id">
+                                        <mat-option *ngFor="let item of departments" [value]="item.id">
+                                            <span *ngIf="currentLang == 'ar'">{{item?.name_ar}}</span>
+                                            <span *ngIf="currentLang == 'en'">{{item?.name_en}}</span>
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="deviceForm.controls.company_id.hasError('required')">
+                                        {{'devices.department' | translate}} {{'required' | translate}}
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <!-- Manufacturer -->
+                            <div class="col-md-4">
+                                <mat-form-field class="w-100" [hideRequiredMarker]="hideRequiredMarker">
+                                    <mat-label> {{'devices.manufacturer' | translate}}</mat-label>
+                                    <mat-select [(value)]="manufacturersId" formControlName="company_id">
+                                        <mat-option *ngFor="let item of manufacturers" [value]="item.id">
+                                            <span *ngIf="currentLang == 'ar'">{{item?.name_ar}}</span>
+                                            <span *ngIf="currentLang == 'en'">{{item?.name_en}}</span>
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="deviceForm.controls.company_id.hasError('required')">
+                                        {{'devices.manufacturer' | translate}} {{'required' | translate}}
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <!-- Model -->
+                            <div class="col-md-4">
+                                <mat-form-field class="w-100" [hideRequiredMarker]="hideRequiredMarker">
+                                    <mat-label>{{'devices.model' | translate}}</mat-label>
+                                    <mat-select [(value)]="modelId" formControlName="model_id">
+                                        <mat-option *ngFor="let item of devicesModel" [value]="item.id">
+                                            <span *ngIf="currentLang == 'ar'">{{item?.name_ar}}</span>
+                                            <span *ngIf="currentLang == 'en'">{{item?.name_en}}</span>
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="deviceForm.controls.warranty_period.hasError('required')">
+                                        {{'devices.model' | translate}} {{'required' | translate}}
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <!-- serial_number -->
+                            <div class="col-md-4">
+                                <mat-form-field appearance="fill" class="w-100"
+                                    [hideRequiredMarker]="hideRequiredMarker">
+                                    <mat-label> {{'devices.serial_number' | translate}}</mat-label>
+                                    <input formControlName="serial_number" matInput
+                                        placeholder="{{'devices.serial_number' | translate}}" />
+                                    <mat-error *ngIf="deviceForm.controls.serial_number.hasError('required')">
+                                        {{'devices.serial_number' | translate}} {{'required' | translate}}
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <!--  status -->
+                            <div class="col-md-4">
+                                <mat-form-field class="w-100" [hideRequiredMarker]="hideRequiredMarker">
+                                    <mat-label>{{'devices.status' | translate}}</mat-label>
+                                    <mat-select [(value)]="statusId" formControlName="status">
+                                        <mat-option *ngFor="let item of deviceStatus" [value]="item.id">
+                                            <span *ngIf="currentLang == 'ar'">{{item?.name_ar}}</span>
+                                            <span *ngIf="currentLang == 'en'">{{item?.name_en}}</span>
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="deviceForm.controls.warranty_period.hasError('required')">
+                                        {{'devices.status' | translate}} {{'required' | translate}}
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <!--  custodians -->
+                            <div class="col-md-4">
+                                <mat-form-field class="w-100" [hideRequiredMarker]="hideRequiredMarker">
+                                    <mat-label>{{'devices.custodians' | translate}}</mat-label>
+                                    <mat-select [(value)]="custodiansId" formControlName="custodians">
+                                        <mat-option *ngFor="let item of custodiansList" [value]="item.id">
+                                            {{item.name}}
+                                        </mat-option>
+                                    </mat-select>
+                                    <!-- <mat-error *ngIf="deviceForm.controls.warranty_period.hasError('required')">
+                                        {{'devices.custodians' | translate}} {{'required' | translate}}
+                                    </mat-error> -->
+                                </mat-form-field>
+                            </div>
+                            <!-- buy_date -->
+                            <div class="col-md-4">
+                                <mat-form-field appearance="fill" class="example-full-width">
+                                    <mat-label>{{'devices.buy_date' | translate}}</mat-label>
+                                    <input formControlName="buy_date" matInput [matDatepicker]="picker3">
+                                    <!-- <mat-hint>MM/DD/YYYY</mat-hint> -->
+                                    <mat-datepicker-toggle matIconSuffix [for]="picker3"></mat-datepicker-toggle>
+                                    <mat-datepicker #picker3></mat-datepicker>
+                                    <mat-error *ngIf="deviceForm.controls.warranty_period.hasError('required')">
+                                        {{'devices.buy_date' | translate}} {{'required' | translate}}
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <!-- Warranty period -->
+                            <div class="col-md-4">
+                                <mat-form-field appearance="fill" class="w-100"
+                                    [hideRequiredMarker]="hideRequiredMarker">
+                                    <mat-label> {{'devices.warranty_period' | translate}}</mat-label>
+                                    <input formControlName="warranty_period" matInput
+                                        placeholder="{{'devices.warranty_period' | translate}}" />
+                                    <mat-error *ngIf="deviceForm.controls.warranty_period.hasError('required')">
+                                        {{'devices.warranty_period' | translate}} {{'required' | translate}}
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+
+                            <!-- description_en -->
+                            <div class="row" *ngIf="currentLang == 'en'">
+                                <mat-form-field class="example-full-width">
+                                    <mat-label>{{'devices.description'|translate}}</mat-label>
+                                    <textarea formControlName="description_en" matInput
+                                        placeholder="Ex. It makes me feel..."></textarea>
+                                    <mat-error *ngIf="deviceForm.controls.warranty_period.hasError('required')">
+                                        {{'devices.description' | translate}} {{'required' | translate}}
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <!-- description_ar -->
+                            <div class="row" *ngIf="currentLang == 'ar'">
+                                <mat-form-field class="example-full-width">
+                                    <mat-label>{{'devices.description'|translate}}</mat-label>
+                                    <textarea formControlName="description_ar" matInput
+                                        placeholder="Ex. It makes me feel..."></textarea>
+                                    <mat-error *ngIf="deviceForm.controls.warranty_period.hasError('required')">
+                                        {{'devices.description' | translate}} {{'required' | translate}}
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="text-center mt-3 d-flex justify-content-end">
+                            <button type="button" class="outline-secondary mx-2 "
+                                routerLink="/dashboard/admin/devices">{{'cancel'|translate}}</button>
+                            <button class="primary text-center ">{{'save'|translate}}</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

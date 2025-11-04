@@ -1,0 +1,15 @@
+<section class="px-0 mx-0">
+    <div class="container-fluid px-0">
+        <app-navbar></app-navbar>
+        <div class="row">
+            <div  class="px-0 position-relative" [class]="isOpen?'col-md-2':'col-md-1'">
+                <app-sidebar (isOpenedflag)="toggleBtn($event)"></app-sidebar>
+            </div>
+            <div class="px-2 bg-gray content" [class]="isOpen?'col-md-10':'col-md-11'">
+                <app-sec-nav></app-sec-nav>
+                <router-outlet></router-outlet>
+
+            </div>
+        </div>
+    </div>
+</section>

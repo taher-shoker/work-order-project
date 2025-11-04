@@ -1,0 +1,16 @@
+<section class="my-card">
+    <div class="text-end">
+        <span (click)="onClose()" class="text-danger pointer"><i class="fa-solid fa-xmark-circle fa-2x"></i></span>
+    </div>
+    <div class="text-center">
+        <div>
+            <img src="../../../assets/images/delete-img.svg" alt="" class="">
+        </div>
+        <h3>Delete this item</h3>
+        <p *ngIf="currentLang == 'en'">Are you sure to delete <span
+                class="text-success text-capitalize fw-bold">{{data.title}} {{data.name_en}}</span></p>
+        <p *ngIf="currentLang == 'ar'">Are you sure to delete <span
+                class="text-success text-capitalize fw-bold">{{data.title}} {{data.name_ar}}</span></p>
+        <button [mat-dialog-close]="data" class="btn btn-outline-danger py-1 px-3 my-2">Delete</button>
+    </div>
+</section>

@@ -1,0 +1,126 @@
+<div [dir]="currentLang == 'en' ? 'ltr' : 'rtl'">
+  <section class="container">
+    <div class="container px-3 py-4">
+      <div class="details-header d-flex justify-content-between">
+        <div class="d-flex align-items-center gap-2">
+          <h6>{{ "devices.details" | translate }}</h6>
+          <button [routerLink]="['add-work-order']" class="btn btn-outline-info">
+            {{ "devices.add" | translate }}
+          </button>
+        </div>
+      </div>
+
+      <div class="my-3 w-50">
+        <h6>{{ "devices.basic_information" | translate }}</h6>
+        <img [src]="deviceData?.image" [alt]="deviceData?.name" class="w-25" />
+        <span>{{ deviceData?.name }}</span>
+      </div>
+      <hr class="my-3" />
+      <!--Device Details -->
+      <div class="first-details">
+        <div class="row">
+          <div class="col-md-3 d-flex align-items-center justify-content-between p-0">
+            <div class="mx-3">
+              <h6>{{ "devices.department" | translate }}</h6>
+              <p>{{ deviceData?.department?.name }}</p>
+            </div>
+            <div class="vertical-divider"></div>
+          </div>
+          <div class="col-md-3 d-flex align-items-center justify-content-between p-0">
+            <div class="mx-4">
+              <h6>{{ "devices.company" | translate }}</h6>
+              <p>{{ deviceData?.company?.name }}</p>
+            </div>
+            <div class="vertical-divider"></div>
+          </div>
+          <div class="col-md-3 justify-content-center">
+            <div class="mx-3">
+              <h6>{{ "devices.model" | translate }}</h6>
+              <p>{{ deviceData?.model?.name }}</p>
+            </div>
+          </div>
+
+          <div class="col-md-3 d-flex align-items-center justify-content-between p-0">
+            <div class="mx-3">
+              <h6>{{ "devices.serial_number" | translate }}</h6>
+              <p>{{ deviceData?.serial_number }}</p>
+            </div>
+            <div class="vertical-divider"></div>
+          </div>
+          <div class="col-md-4 d-flex align-items-center justify-content-between p-0 my-3">
+            <div class="mx-4">
+              <h6>{{ "devices.purchase_date" | translate }}</h6>
+              <p>{{ deviceData?.buy_date }}</p>
+            </div>
+            <div class="vertical-divider"></div>
+          </div>
+          <div class="col-md-4 justify-content-center my-3">
+            <div class="mx-3">
+              <h6>{{ "devices.warranty_period" | translate }}</h6>
+              <p>{{ deviceData?.warranty_period }}</p>
+            </div>
+          </div>
+          <div class="col-md-4 justify-content-center my-3">
+            <img [src]="deviceData?.qr_code" [alt]="deviceData?.model?.name" class="w-25" />
+          </div>
+        </div>
+      </div>
+      <div class="bg-view rounded-5 p-3">
+        <h6>{{ "devices.description" | translate }}</h6>
+        <p>{{ deviceData?.description }}</p>
+      </div>
+
+      <div class="my-3">
+        <div class="d-flex justify-content-between">
+          <h4>{{ "devices.record_work_orders" | translate }}</h4>
+          <a class="text-info">
+            {{ "devices.view_more" | translate }}
+            <i class="fa-solid fa-angles-left"></i>
+          </a>
+        </div>
+        <div *ngFor="let work of deviceWork">
+          <div class="bg-body p-2 rounded-5 border border-secondary p-2 my-2">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <span class="w-100"><img src="../../../../../assets/images/Avatar.png" alt="admin-img"
+                    width="25" /></span>
+                <span class="me-2 fw-bold">فني {{work?.technician?.name}}</span>
+              </div>
+              <div class="ms-3">
+                <p>{{ work?.start_date | date}}</p>
+              </div>
+            </div>
+            <hr class="my-2" />
+            <div class="d-flex justify-content-between align-items-center ">
+              <div class="d-flex gap-5">
+                <div>
+                  <h6>{{ "devices.work_order_number" | translate }}</h6>
+                  <p>{{ work?.number }}</p>
+                </div>
+                <div>
+                  <h6>{{ "devices.order_type" | translate }}</h6>
+                  <p>{{ work?.work_type?.name }}</p>
+                </div>
+                <div>
+                  <h6>{{ "devices.creation_date" | translate }}</h6>
+                  <p>{{ work?.created_at | date}}</p>
+                </div>
+                <div>
+                  <h6>{{ "devices.execution_date" | translate }}</h6>
+                  <p>{{ deviceData?.start_time | translate }}</p>
+                </div>
+              </div>
+              <div>
+                <button class="btn bg-btn-device text-btn-device">{{ work?.status?.name }}</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="d-flex justify-content-end my-3">
+          <button class="btn btn-primary mx-2 w-25">{{ "devices.edit" | translate }}</button>
+          <a routerLink="/dashboard/admin/devices" class="btn bg-btn-close w-25">{{ "devices.close" | translate }}</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

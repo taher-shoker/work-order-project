@@ -1,0 +1,12 @@
+<section class="logout">
+    <h1 mat-dialog-title class="sec-color"> {{'logOut' | translate}}</h1>
+    <mat-dialog-content class="text-white">
+        {{'logOutmsg' | translate}}
+    </mat-dialog-content>
+    <div mat-dialog-actions class="d-flex justify-content-between">
+            <button  mat-button mat-dialog-close>{{'cancel' | translate}}</button>
+            <button class="primary text-white" (click)="onlogOut()" mat-button mat-dialog-close cdkFocusInitial>{{'logOut' | translate}}</button>
+          
+    </div>
+    
+</section>

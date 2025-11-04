@@ -1,0 +1,88 @@
+<section>
+    <div class="container-fluid h-100 ">
+        <div class="row h-100">
+            <div class="col-md-7">
+                <div class="container">
+                    <div class="d-flex justify-content-center">
+                        <img class=" logo " src="../../../../assets/images/logo.png" alt="" />
+                    </div>
+                    <div class="content">
+                        <h2>{{'home.hello' | translate}}</h2>
+                        <p>{{'home.pannerWelcome' | translate}}</p>
+                        <h6>{{'login.noaccount' | translate}} <a routerLink="/auth/register">{{'login.register' |
+                                translate}}</a></h6>
+
+                        <form [formGroup]="loginForm" (ngSubmit)="onSubmit(loginForm)">
+                            <div class="row">
+                                <!-- Email -->
+                                <div class="col-md-12">
+                                    <label for="">{{'login.email' | translate}}</label>
+                                    <input type="text" class="form-control"
+                                        placeholder="{{'login.enteremail' | translate}}" formControlName="email">
+                                    <div class="error-container mb-2">
+                                        <mat-error
+                                            *ngIf="loginForm.controls.email.touched && loginForm.controls.email.hasError('required')">
+                                            {{'login.email' | translate}} {{'required' | translate}}
+
+                                        </mat-error>
+                                        <mat-error
+                                            *ngIf="loginForm.controls.email.touched && loginForm.controls.email.hasError('pattern')">
+                                            ex: abc@domain.com
+                                        </mat-error>
+                                    </div>
+                                </div>
+                                <!-- Password -->
+                                <div class="col-md-12 position-relative">
+                                    <label for="">{{'login.password' | translate}}</label>
+                                    <input [type]="hide ? 'password' : 'text'" class="form-control "
+                                        placeholder="{{'login.enterpassword' | translate}}" formControlName="password">
+                                    <div class="eye-icon">
+                                        <button type="button" mat-icon-button matSuffix (click)="hide = !hide"
+                                            [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                                            <mat-icon>{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>
+                                        </button>
+
+                                    </div>
+                                    <div class="error-container mb-3">
+                                        <mat-error
+                                            *ngIf="loginForm.controls.password.touched && loginForm.controls.password.hasError('required')">
+                                            {{'login.password' | translate}} {{'required' | translate}}
+                                        </mat-error>
+                                        <mat-error
+                                            *ngIf="loginForm.controls.password.touched && loginForm.controls.password.hasError('pattern')">
+                                            A password must contain at least eight characters, including at least one
+                                            number, both lower and
+                                            uppercase letters, and special characters
+                                        </mat-error>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 text-start py-2">
+                                    <a class="text-decoration-none" routerLink="/auth/forgetPassword">{{'login.forget' |
+                                        translate}}</a>
+                                </div>
+                                <div class="col-md-12 mx-auto">
+                                    <button class="w-100  primary" [disabled]="loginForm.invalid">{{'login.login' |
+                                        translate}}
+                                    </button>
+                                </div>
+
+                            </div>
+
+
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-md-5 image d-flex justify-content-center align-items-end">
+                <div class="container">
+                    <div class="image-content ">
+                        <h6>{{'login.welcomeback' | translate}}</h6>
+                        <span>{{'login.signin' | translate}}</span>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

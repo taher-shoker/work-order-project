@@ -1,0 +1,100 @@
+<section>
+    <div class="table-card container py-5">
+        <div class="d-flex justify-content-between all-orders">
+            <h4>{{'department.department' | translate}}</h4>
+            <button class="primary text-center addbtn mx-4" (click)="openAddDepartment()">
+                <!-- <span class="fa-solid fa-plus mx-2"></span> -->
+                {{'addnew'|translate}}
+            </button>
+        </div>
+        <div class="container">
+            <div class="row my-3  gap-2 ">
+                <!-- total-departments -->
+                <div class="all-orders col d-flex">
+                    <div class="col-md-2 icon mt-3">
+                        <i style="color: #3575DD;" class="fa-solid fa-sitemap fs-4 rounded-circle"></i>
+                    </div>
+                    <div class="col-md-10">
+                        <h1 class="me-2">47</h1>
+                        <h4 style="color: #3575DD;">{{'department.total-departments' | translate}}</h4>
+                    </div>
+
+                </div>
+                <!-- medical-departments -->
+                <div class="all-orders col d-flex ">
+                    <div class="col-md-2 icon mt-3">
+                        <i style="color: #D73D3D;" class="fa-solid fa-sitemap fs-4 rounded-circle"></i>
+                    </div>
+                    <div class="col-md-10">
+                        <h1 class="me-2">43</h1>
+                        <h4 style="color: #D73D3D;">{{'department.medical-departments' | translate}}</h4>
+                    </div>
+                </div>
+                <!-- administrative-departments -->
+                <div class="all-orders col d-flex  ">
+                     <div class="col-md-2 icon mt-3">
+                        <i style="color: #D3A107;" class="fa-solid fa-toolbox fs-4 rounded-circle"></i>
+                    </div>
+                    <div class="col-md-10">
+                        <h1 class="me-2">550</h1>
+                        <h4 style="color: #D3A107;">{{'department.administrative-departments' | translate}}</h4>
+                    </div>
+                </div>
+                <!-- inactive-departments -->
+                <div class="all-orders col d-flex  ">
+                     <div class="col-md-2 icon mt-3">
+                        <i style="color: #1FB155;" class="fa-solid fa-toolbox fs-4 rounded-circle"></i>
+                    </div>
+                    <div class="col-md-10">
+                        <h1 class="me-2">5</h1>
+                        <h4 style="color: #1FB155;">{{'department.inactive-departments' | translate}}</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container all-orders mt-3">
+            <table class="custom-table">
+                <thead class="text-capitalize">
+                    <th class="px-2 alone">{{'department.name_en' | translate}}</th>
+                    <th class="px-2 alone">{{'department.name_ar' | translate}}</th>
+                    <th class="alone">{{'department.maintenance_supervisor.name' | translate}}</th>
+                    <th class="alone">{{'department.actions' | translate}}</th>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of tableData; let isEven = even">
+                        <td class="px-2">{{ item.name_en }}</td>
+                        <td class="px-2">{{ item.name_ar }}</td>
+                        <td *ngIf="item.maintenance_supervisor">{{ item.maintenance_supervisor.name}}</td>
+                        <td *ngIf="!item.maintenance_supervisor">{{'department.maintenance_supervisor.supervisor' |
+                            translate}}</td>
+                        <td class="text-center">
+                            <button mat-icon-button [matMenuTriggerFor]="menu"
+                                aria-label="Example icon-button with a menu">
+                                <mat-icon>more_vert</mat-icon>
+                            </button>
+                            <mat-menu #menu="matMenu">
+                                <button mat-menu-item (click)="openEditDepartment(item.id)">
+                                    <mat-icon>edit_square</mat-icon>
+                                    <span>{{'department.edit'|translate}}</span>
+                                </button>
+                                <button mat-menu-item (click)="deleteDialog(item)">
+                                    <mat-icon>delete</mat-icon>
+                                    <span>{{'delete'|translate}}</span>
+                                </button>
+                            </mat-menu>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+
+    </div>
+    <div class="bg-info">
+        <mat-paginator #paginator class="demo-paginator" (page)="handlePageEvent($event)"
+            [length]="tableResponse?.total" [pageSize]="tableResponse?.pageSize"
+            [pageSizeOptions]="[5, 10, 15, 20, 40, 100]" [pageIndex]="pageIndex" aria-label="Select page">
+        </mat-paginator>
+    </div>
+</section>

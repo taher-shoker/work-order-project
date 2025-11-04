@@ -1,0 +1,116 @@
+<section>
+  <div class="table-card container py-5 ">
+    <!-- Header -->
+    <div class="d-flex justify-content-between all-orders ">
+      <h4>{{'users.users' | translate}}</h4>
+      <button class="primary text-center addbtn mx-4">{{'addnew'|translate}}</button>
+    </div>
+    <!-- cards -->
+    <div class="container">
+      <div class="row my-3  gap-3 ">
+        <!-- All Users -->
+        <div class="all-orders col d-flex ">
+          <div class="col-md-10">
+            <h4 style="color: #05A0E1;">{{'users.users' | translate}}</h4>
+            <h1>{{tableResponse.total}}</h1>
+          </div>
+          <div class="col-md-2 icon text-start ">
+            <i style="color: #05A0E1;" class="fa-solid fa-sitemap fs-4 rounded-circle"></i>
+          </div>
+        </div>
+        <!-- Active -->
+        <div class="all-orders col d-flex ">
+          <div class="col-md-10">
+            <h4 style="color: #3575DD;">{{'users.active' | translate}}</h4>
+            <h1>226</h1>
+          </div>
+          <div class="col-md-2 icon text-start ">
+            <i style="color: #3575DD;" class="fa-solid fa-sitemap fs-4 rounded-circle"></i>
+          </div>
+        </div>
+        <!-- Not Active -->
+        <div class="all-orders col d-flex ">
+          <div class="col-md-10">
+            <h4 style="color: #D73D3D;">{{'users.notActive' | translate}}</h4>
+            <h1>132</h1>
+          </div>
+          <div class="col-md-2 icon text-start ">
+            <i style="color: #D73D3D;" class="fa-solid fa-sitemap fs-4 rounded-circle"></i>
+          </div>
+        </div>
+        <!-- Engineers -->
+        <div class="all-orders col d-flex  ">
+          <div class="col-md-10">
+            <h4 style="color: #D3A107;">{{'users.engineer' | translate}}</h4>
+            <h1>124</h1>
+          </div>
+          <div class="col-md-2 icon text-start ">
+            <i style="color: #D3A107;" class="fa-solid fa-toolbox fs-4 rounded-circle"></i>
+          </div>
+        </div>
+        <!-- Technician -->
+        <div class="all-orders col d-flex  ">
+          <div class="col-md-10">
+            <h4 style="color: #1FB155;">{{'users.technician' | translate}}</h4>
+            <h1>1026</h1>
+          </div>
+          <div class="col-md-2 icon text-start ">
+            <i style="color: #1FB155;" class="fa-solid fa-toolbox fs-4 rounded-circle"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- table -->
+    <div class="container all-orders mt-3">
+      <div class="table-responsive">
+        <table class="custom-table">
+          <thead class="text-capitalize">
+            <th class="px-2 alone">{{'users.user' | translate}}</th>
+            <th class="alone">{{'users.status' | translate}}</th>
+            <th class="alone">{{'users.mobile' | translate}}</th>
+            <th class="alone">{{'users.email' | translate}}</th>
+            <th class="alone">{{'users.actions' | translate}}</th>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of tableData; let isEven = even">
+              <td class="px-2 py-0">{{ item.name }}</td>
+              <td>
+                <span class="status px-4" [class]="item.is_active ? 'active' : 'notActive'">{{ item.is_active==1 ?
+                  ('users.active' | translate) : ('users.notActive'| translate) }}</span>
+              </td>
+              <td>{{ item.mobile }}</td>
+              <td>{{ item.email }}</td>
+              <td class="text-center">
+                <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                  <mat-icon>more_vert</mat-icon>
+                </button>
+                <mat-menu #menu="matMenu">
+                  <button mat-menu-item (click)="openBlockDialog(item)">
+                    <mat-icon>block</mat-icon>
+                    <span>{{ item.is_active ==1 ? ('users.block' | translate) : ('users.unBlock' | translate) }} </span>
+                  </button>
+
+                  <button [routerLink]="['viewUser', item.id]" mat-menu-item (click)="openUserDialog(item.id)">
+                    <mat-icon style="color: #05A0E1;">visibility</mat-icon>
+                    <span style="color: #05A0E1;">{{'users.view' | translate}}</span>
+                  </button>
+                  <button [routerLink]="['edit',item.id]" mat-menu-item>
+                    <mat-icon style="color: #feee00;">edit_square</mat-icon>
+                    <span style="color: #feee00;">{{'edit'|translate}}</span>
+                  </button>
+                </mat-menu>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <!-- Pagination -->
+  <div class="bg-info">
+    <mat-paginator #paginator class="demo-paginator" (page)="handlePageEvent($event)" [length]="tableResponse?.total"
+      [pageSize]="tableResponse?.pageSize" [pageSizeOptions]="[5, 10, 15, 20, 40, 100]" [pageIndex]="pageIndex"
+      aria-label="Select page">
+    </mat-paginator>
+  </div>
+</section>

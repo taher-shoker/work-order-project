@@ -1,0 +1,181 @@
+<section>
+    <div class="container">
+        <div class="row my-3  gap-2 ">
+            <!-- total-work-orders -->
+            <div class="all-orders col d-flex">
+                <div class="col-md-2 icon mt-3">
+                    <i style="color: #3575DD;" class="fa-solid fa-sitemap fs-4 rounded-circle"></i>
+                </div>
+                <div class="col-md-10">
+                    <h1 class="me-2">47</h1>
+                    <h4 style="color: #3575DD;">{{'reports.total-work-orders' | translate}}</h4>
+                </div>
+            </div>
+            <!-- equipment-in-operation -->
+            <div class="all-orders col d-flex ">
+                <div class="col-md-2 icon mt-3">
+                    <i style="color: #D73D3D;" class="fa-solid fa-sitemap fs-4 rounded-circle"></i>
+                </div>
+                <div class="col-md-10">
+                    <h1 class="me-2">43</h1>
+                    <h4 style="color: #D73D3D;">{{'reports.equipment-in-operation' | translate}}</h4>
+                </div>
+            </div>
+            <!-- background -->
+            <div class="all-orders col d-flex  ">
+                <div class="col-md-2 icon mt-3">
+                    <i style="color: #D3A107;" class="fa-solid fa-toolbox fs-4 rounded-circle"></i>
+                </div>
+                <div class="col-md-10">
+                    <h1 class="me-2">550</h1>
+                    <h4 style="color: #D3A107;">{{'reports.background' | translate}}</h4>
+                </div>
+            </div>
+            <!-- closed -->
+            <div class="all-orders col d-flex  ">
+                <div class="col-md-2 icon mt-3">
+                    <i style="color: #1FB155;" class="fa-solid fa-toolbox fs-4 rounded-circle"></i>
+                </div>
+                <div class="col-md-10">
+                    <h1 class="me-2">5</h1>
+                    <h4 style="color: #1FB155;">{{'reports.closed' | translate}}</h4>
+                </div>
+            </div>
+            <!-- open -->
+            <div class="all-orders col d-flex">
+                <div class="col-md-2 icon mt-3">
+                    <i style="color: #3575DD;" class="fa-solid fa-sitemap fs-4 rounded-circle"></i>
+                </div>
+                <div class="col-md-10">
+                    <h1 class="me-2">5</h1>
+                    <h4 style="color: #3575DD;">{{'reports.open' | translate}}</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Filter -->
+    <div class="container">
+        <form [formGroup]="reportForm" (ngSubmit)="onSubmit(reportForm)">
+            <div class="row">
+                <!--  Status -->
+                <div class="col-md-4">
+                    <mat-form-field [hideRequiredMarker]="hideRequiredMarker">
+                        <mat-label>{{'orders.status' | translate}}</mat-label>
+                        <mat-select formControlName="status">
+                            <mat-option>None</mat-option>
+                            <mat-option *ngFor="let item of status" [value]="item.id">
+                                {{item.name}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <!--  Department -->
+                <div class="col-md-4">
+                    <mat-form-field [hideRequiredMarker]="hideRequiredMarker">
+                        <mat-label>{{'orders.department' | translate}}</mat-label>
+                        <!-- <mat-select (selectionChange)="onselectDepartment()" [(value)]="departmentId" -->
+                        <mat-select formControlName="department_id">
+                            <mat-option>None</mat-option>
+                            <mat-option *ngFor="let item of departments" [value]="item.id">
+                                {{item.name}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <!--  Engineer -->
+                <div class="col-md-4">
+                    <mat-form-field [hideRequiredMarker]="hideRequiredMarker">
+                        <mat-label>{{'orders.engineer' | translate}}</mat-label>
+                        <mat-select formControlName="engineer_id">
+                            <mat-option>None</mat-option>
+                            <mat-option *ngFor="let item of engineers" [value]="item.id">
+                                {{item.name}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <!--  Technician -->
+                <div class="col-md-4">
+                    <mat-form-field [hideRequiredMarker]="hideRequiredMarker">
+                        <mat-label>{{'orders.technician' | translate}}</mat-label>
+                        <mat-select formControlName="technician_id">
+                            <mat-option>None</mat-option>
+                            <mat-option *ngFor="let item of technicians" [value]="item.id">
+                                {{item.name}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <!-- start Date -->
+                <div class="col-md-4">
+                    <mat-form-field appearance="fill" class="example-full-width">
+                        <mat-label>{{'reports.start' | translate}}</mat-label>
+                        <input formControlName="from_date" matInput [matDatepicker]="picker3">
+                        <mat-hint>MM/DD/YYYY</mat-hint>
+                        <mat-datepicker-toggle matIconSuffix [for]="picker3"></mat-datepicker-toggle>
+                        <mat-datepicker #picker3></mat-datepicker>
+                    </mat-form-field>
+                </div>
+                <!-- end date -->
+                <div class="col-md-4">
+                    <mat-form-field appearance="fill" class="example-full-width">
+                        <mat-label>{{'reports.end' | translate}}</mat-label>
+                        <input formControlName="to_date" matInput [matDatepicker]="picker4">
+                        <mat-hint>MM/DD/YYYY</mat-hint>
+                        <mat-datepicker-toggle matIconSuffix [for]="picker4"></mat-datepicker-toggle>
+                        <mat-datepicker #picker4></mat-datepicker>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="text-start my-3">
+                <button class="primary text-center w-25">{{'search'|translate}}</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Table -->
+    <div id="print-section" class="d-flex align-items-center" [dir]="currentLang =='en' ? 'ltr' : 'rtl'">
+        <div [dir]="currentLang =='en' ? 'rtl' : 'ltr'">
+            <img src="../../../../../assets//images/LogInLogo.png" alt="LogInLogo">
+            <img src="../../../../../assets//images/Logo.jpg" alt="Logo">
+        </div>
+        <div class="table-card container">
+            <div class="d-flex justify-content-between all-orders mb-2" [dir]="currentLang =='en' ? 'ltr' : 'rtl'">
+                <h4>{{'reports.reports' | translate}}</h4>
+            </div>
+            <table class="custom-table table-print" [dir]="currentLang =='en' ? 'ltr' : 'rtl'">
+                <thead class="text-capitalize">
+                    <th class="alone">#</th>
+                    <th class="alone">{{'reports.building' | translate}}</th>
+                    <th class="alone">{{'reports.work_type' | translate}}</th>
+                    <th class="alone">{{'reports.source' | translate}}</th>
+                    <th class="alone">{{'reports.department' | translate}}</th>
+                    <th class="alone">{{'reports.engineer' | translate}}</th>
+                    <th class="alone">{{'reports.technician' | translate}}</th>
+                    <th class="alone">{{'reports.added_by' | translate}}</th>
+                    <th class="alone">{{'reports.status' | translate}}</th>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of data; let isEven = even" [class]="isEven ? '' : 'bg-secondary-subtle'">
+                        <td class="alone p-2"><a [routerLink]="['/dashboard/admin/work-orders/view-order', item.id]">{{
+                                item.id }}</a></td>
+                        <td class="alone">{{ item.building?.name }}</td>
+                        <td class="alone">{{ item.work_type?.name }}</td>
+                        <td class="alone">{{ item.source?.name }}</td>
+                        <td class="alone">{{ item.department?.name }}</td>
+                        <td class="alone">{{ item.engineer?.name }}</td>
+                        <td class="alone">{{ item.technician?.name }}</td>
+                        <td class="alone">{{ item.added_by?.name }}</td>
+                        <td class="alone">{{ item.status?.name }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+<div class="mt-3 p-3" [dir]="currentLang =='en' ? 'rtl' : 'ltr'">
+    <button class="primary" printTitle="Report"
+        [printStyle]="{img : {'width': '10%','text-align':'start','display': 'inline-block','margin':'0px 10px'}, thead:{'background-color':'#333'}}"
+        styleSheetFile="../../../../../assets/myStyles/print-table.scss" printSectionId="print-section"
+        ngxPrint>{{'reports.print' | translate}}</button>
+</div>

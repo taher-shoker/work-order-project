@@ -1,0 +1,36 @@
+<div [dir]="currentLang =='en' ? 'ltr' : 'rtl'">
+    <section>
+        <h1 mat-dialog-title class="w-100 bg-orange text-dark">
+            {{'sources.add'|translate}}
+        </h1>
+        <div mat-dialog-content>
+            <form [formGroup]="sourcesForm">
+                <div class="row">
+                    <!--  english name -->
+                    <div class="col-md-6">
+                        <mat-form-field appearance="fill" class="w-100">
+                            <mat-label class="text-orange">{{'sources.name_en' | translate}}</mat-label>
+                            <input formControlName="name_en" matInput placeholder="{{'sources.name_en' | translate}}" />
+                        </mat-form-field>
+                    </div>
+                    <!--  arabic name -->
+                    <div class="col-md-6">
+                        <mat-form-field appearance="fill" class="w-100">
+                            <mat-label class="text-orange">{{'sources.name_ar' | translate}}</mat-label>
+                            <input formControlName="name_ar" matInput placeholder="{{'sources.name_ar' | translate}}" />
+                        </mat-form-field>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+        <div mat-dialog-actions class="d-flex justify-content-between">
+            <button class=" primary mb-2 text-white" [disabled]="sourcesForm.invalid" mat-button
+                [mat-dialog-close]="sourcesForm" cdkFocusInitial>
+                {{'save'|translate }}
+            </button>
+            <button class="btn mb-2 btn-secondary" mat-button (click)="onNoClick()">
+                {{'cancel'|translate}}
+            </button>
+        </div>
+    </section>

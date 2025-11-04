@@ -1,0 +1,32 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.main-navbar {
+    position: sticky;
+    top: 0;
+    z-index: 101;
+    background-color: #0462C1;
+    height: auto;
+    padding: 0.3rem 2rem;
+    backdrop-filter: blur(10px);
+    display: flex;
+    flex-wrap: wrap;
+    transition: background-color 0.3s ease;
+
+
+}
+
+
+
+i , p {
+    color: #E6E8F1;
+    // width: 25px;
+    // height: 25px;
+
+}
+.icons{
+    // background-color: aqua;
+    align-items: center;
+}

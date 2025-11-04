@@ -1,0 +1,59 @@
+<section class="sec-nav shadow-sm">
+    <div class="container d-flex justify-content-between align-items-center ps-0 ">
+        <!-- welcome message -->
+        <div class="welcome-container py-2">
+            <h3>{{'controlPanel' | translate}}</h3>
+            <p>{{'home.pannerWelcome' | translate}}</p>
+        </div>
+        <div class="2nd  d-flex align-items-center">
+            <i class="fa-regular fa-bell " style="color: #6E7481;"></i>
+            <div class="vertical-divider d-flex align-items-center mx-4"></div>
+            <!-- Language Switcher -->
+            <div class="lang-switcher d-flex align-items-center p-2 mx-2 shadow-sm" style="cursor: pointer"
+                (click)="toggleLang()">
+                <ng-container *ngIf="_HelperService.translate.currentLang == 'ar'; else english">
+                    <i class="fa-solid fa-angle-down" style="color: #6E7481;"></i>
+                    <span class="px-2" style="color: #6E7481;">English</span>
+                    <img src="../../../assets/images/en-flag.png" class="lang-img rounded-circle" />
+                </ng-container>
+                <ng-template #english>
+                    <i class="fa-solid fa-angle-down" style="color: #6E7481;"></i>
+                    <span class="px-2" style="color: #6E7481;">العربية</span>
+                    <img src="../../../assets/images/ar-flag.png" class="lang-img rounded-circle" />
+                </ng-template>
+            </div>
+            <!-- profile -->
+            <div class="profile mx-4 px-2 d-flex align-items-center shadow">
+                <div class="">
+                    <img src="../../../assets/images/admin-img.webp" class="profile-img rounded-circle" />
+                </div>
+                <div class="profile-container mx-2 ">
+                    <h4 class="mb-0">{{name}}</h4>
+                    <p class="mt-0">{{email}}</p>
+                </div>
+                    <!-- <i class="fa-solid fa-angle-down px-2 mx-2 " style="color: #6E7481;"></i> -->
+<!-- More menu -->
+      <div class="d-flex align-items-center">
+        <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="More">
+          <mat-icon>expand_more</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+          <button routerLink="/dashboard/admin/edit-profile" mat-menu-item>
+            <mat-icon>person</mat-icon>
+            <span>{{ 'profile' | translate }}</span>
+          </button>
+          <button mat-menu-item>
+            <mat-icon>visibility</mat-icon>
+            <span>{{ 'changePass' | translate }}</span>
+          </button>
+          <button (click)="logOut()" mat-menu-item>
+            <mat-icon>logout</mat-icon>
+            <span>{{ 'logOut' | translate }}</span>
+          </button>
+        </mat-menu>
+      </div>
+            </div>
+        </div>
+
+    </div>
+</section>

@@ -1,0 +1,85 @@
+<section>
+    <div class="table-card container py-5 ">
+        <div class="d-flex justify-content-between all-orders ">
+            <h4>{{'building.buildings' | translate}}</h4>
+            <button (click)="openAddBuilding()" class="primary text-center addbtn mx-4">{{'building.add'|translate}}</button>
+        </div>
+          <div class="container">
+            <div class="row my-3  gap-2 ">
+                <!-- total-buildings -->
+                <div class="all-orders col d-flex">
+                    <div class="col-md-2 icon mt-3">
+                        <i style="color: #3575DD;" class="fa-solid fa-sitemap fs-4 rounded-circle"></i>
+                    </div>
+                    <div class="col-md-10">
+                        <h1 class="me-2">47</h1>
+                        <h4 style="color: #3575DD;">{{'building.total-buildings' | translate}}</h4>
+                    </div>
+
+                </div>
+                <!-- main-buildings -->
+                <div class="all-orders col d-flex  ">
+                     <div class="col-md-2 icon mt-3">
+                        <i style="color: #1FB155;" class="fa-solid fa-toolbox fs-4 rounded-circle"></i>
+                    </div>
+                    <div class="col-md-10">
+                        <h1 class="me-2">42</h1>
+                        <h4 style="color: #1FB155;">{{'building.main-buildings' | translate}}</h4>
+                    </div>
+                </div>
+                <!-- service-buildings -->
+                <div class="all-orders col d-flex  ">
+                     <div class="col-md-2 icon mt-3">
+                        <i style="color: #D3A107;" class="fa-solid fa-toolbox fs-4 rounded-circle"></i>
+                    </div>
+                    <div class="col-md-10">
+                        <h1 class="me-2">560</h1>
+                        <h4 style="color: #D3A107;">{{'building.service-buildings' | translate}}</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- table -->
+        <div class="container all-orders mt-3">
+            <table class="custom-table">
+                <thead class="text-capitalize">
+                    <th class="px-2 alone">{{'building.name_en' | translate}}</th>
+                    <th class="px-2 alone">{{'building.name_ar' | translate}}</th>
+                    <th class="alone">{{'building.no_of_floors' | translate}}</th>
+                    <th class="alone">{{'building.actions' | translate}}</th>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of tableData; let isEven = even">
+                        <td class="px-2">{{ item.name_en }}</td>
+                        <td>{{ item.name_ar }}</td>
+                        <td>{{ item.no_of_floors}}</td>
+                        <td class="text-center">
+                            <button mat-icon-button [matMenuTriggerFor]="menu"
+                                aria-label="Example icon-button with a menu">
+                                <mat-icon>more_vert</mat-icon>
+                            </button>
+                            <mat-menu #menu="matMenu">
+
+                                <button mat-menu-item (click)="openEditBuilding(item.id)">
+                                    <mat-icon>edit_square</mat-icon>
+                                    <span>{{'building.edit'|translate}}</span>
+                                </button>
+                                <button mat-menu-item (click)="deleteDialog(item)">
+                                    <mat-icon>delete</mat-icon>
+                                    <span>{{'delete'|translate}}</span>
+                                </button>
+                            </mat-menu>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!-- Pagination -->
+    <div class="bg-info">
+        <mat-paginator #paginator class="demo-paginator" (page)="handlePageEvent($event)"
+            [length]="tableResponse?.total" [pageSize]="tableResponse?.pageSize"
+            [pageSizeOptions]="[5, 10, 15, 20, 40, 100]" [pageIndex]="pageIndex" aria-label="Select page">
+        </mat-paginator>
+    </div>
+</section> 

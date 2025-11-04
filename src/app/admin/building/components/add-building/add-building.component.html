@@ -1,0 +1,44 @@
+<div [dir]="currentLang =='en' ? 'ltr' : 'rtl'">
+    <section>
+        <h1 mat-dialog-title class="w-100 bg-orange text-dark">
+        {{'building.add' | translate}}
+        </h1>
+        <div mat-dialog-content>
+            <form [formGroup]="buildingForm">
+                <div class="row">
+                    <!--  english name -->
+                    <div class="col-md-6">
+                        <mat-form-field appearance="fill" class="w-100">
+                            <mat-label class="text-orange">{{'building.name_en' | translate}}</mat-label>
+                            <input formControlName="name_en" matInput placeholder="{{'building.name_en' | translate}}" />
+                        </mat-form-field>
+                    </div>
+                    <!--  arabic name -->
+                    <div class="col-md-6">
+                        <mat-form-field appearance="fill" class="w-100">
+                            <mat-label class="text-orange">{{'building.name_ar' | translate}}</mat-label>
+                            <input formControlName="name_ar" matInput placeholder="{{'building.name_ar' | translate}}" />
+                        </mat-form-field>
+                    </div>
+                    <!-- floors -->
+                    <div class="col-md-6">
+                        <mat-form-field appearance="fill" class="w-100">
+                            <mat-label class="text-orange">{{'building.no_of_floors' | translate}}</mat-label>
+                            <input formControlName="no_of_floors" matInput placeholder="{{'building.no_of_floors' | translate}}" />
+                        </mat-form-field>
+                    </div>
+                    
+                </div>
+            </form>
+        </div>
+        <div mat-dialog-actions class="d-flex justify-content-between">
+            <button class=" primary mb-2 text-white" [disabled]="buildingForm.invalid" mat-button [mat-dialog-close]="buildingForm" cdkFocusInitial>
+                {{'save'|translate }}
+            </button>
+            <button class="btn mb-2 btn-secondary" mat-button (click)="onNoClick()">
+                {{'cancel'|translate}}
+            </button>
+        </div>
+    </section>
+
+

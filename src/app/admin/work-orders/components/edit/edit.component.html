@@ -1,0 +1,179 @@
+<section class="add-view-order">
+    <div class="my-4">
+        <div class="row">
+            <div class="col-md-10">
+                <div class="p-4">
+                    <div class="row align-items-center">
+                        <div class="col-md-6">
+                            <div class="title mb-2">
+                                <span>{{'welcome' | translate}}</span>
+                                <p><a routerLink="/dashboard/admin/work-orders">{{'orders.orders' | translate}}</a> > > <span>{{ 'orders.editOrder' | translate }}</span></p>
+
+                                <!-- <h3 class="fs-3">
+                                    {{ isUpdatePage ? ('orders.editOrder' | translate) : ('orders.addOrder' |
+                                    translate) }}
+                                </h3> -->
+                            </div>
+                        </div>
+                    </div>
+                    <form [formGroup]="orderForm" (ngSubmit)="onSubmit(orderForm)">
+
+                        <div class="row all-orders">
+                            <!-- Date -->
+                            <div class="col-md-4">
+                                <mat-form-field appearance="fill" class="example-full-width">
+                                    <mat-label>{{'orders.date' | translate}}</mat-label>
+                                    <input formControlName="start_date" matInput [matDatepicker]="picker3">
+                                    <mat-hint>MM/DD/YYYY</mat-hint>
+                                    <mat-datepicker-toggle matIconSuffix [for]="picker3"></mat-datepicker-toggle>
+                                    <mat-datepicker #picker3></mat-datepicker>
+                                </mat-form-field>
+                            </div>
+                            <!--  Department -->
+                            <div class="col-md-4">
+                                <mat-form-field class="w-100" [hideRequiredMarker]="hideRequiredMarker">
+                                    <mat-label>{{'orders.department' | translate}}</mat-label>
+                                    <mat-select (selectionChange)="onselectDepartment()" [(value)]="departmentId"
+                                        formControlName="department_id">
+                                        <mat-option *ngFor="let item of departments" [value]="item.id">
+                                            {{item.name}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <!--  Engineer -->
+                            <div class="col-md-4">
+                                <mat-form-field class="w-100" [hideRequiredMarker]="hideRequiredMarker">
+                                    <mat-label>{{'orders.engineer' | translate}}</mat-label>
+                                    <mat-select formControlName="engineer_id">
+                                        <mat-option *ngFor="let item of engineers" [value]="item.id">
+                                            {{item.name}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <!--  Technician -->
+                            <div class="col-md-4">
+                                <mat-form-field class="w-100" [hideRequiredMarker]="hideRequiredMarker">
+                                    <mat-label>{{'orders.technician' | translate}}</mat-label>
+                                    <mat-select formControlName="technician_id">
+                                        <mat-option *ngFor="let item of technicians" [value]="item.id">
+                                            {{item.name}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <!-- Work Type -->
+                            <div class="col-md-4">
+                                <mat-form-field class="w-100" [hideRequiredMarker]="hideRequiredMarker">
+                                    <mat-label>{{'orders.workType' | translate}}</mat-label>
+                                    <mat-select formControlName="work_type_id">
+                                        <mat-option *ngFor="let item of workType" [value]="item.id">
+                                            {{item.name}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <!-- Building -->
+                            <div class="col-md-4">
+                                <mat-form-field class="w-100" [hideRequiredMarker]="hideRequiredMarker">
+                                    <mat-label>{{'orders.building' | translate}}</mat-label>
+                                    <mat-select formControlName="building_id">
+                                        <mat-option *ngFor="let item of building" [value]="item.id">
+                                            {{item.name}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <!-- Floor no -->
+                            <div class="col-md-4">
+                                <mat-form-field appearance="fill" class="w-100"
+                                    [hideRequiredMarker]="hideRequiredMarker">
+                                    <mat-label> {{'orders.floor' | translate}}</mat-label>
+                                    <input formControlName="floor_no" matInput
+                                        placeholder="{{'orders.floor' | translate}}" />
+                                    <mat-error *ngIf="orderForm.controls.floor_no.hasError('required')">
+                                        {{'orders.floor' | translate}} {{'required' | translate}}
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <!-- Room no -->
+                            <div class="col-md-4">
+                                <mat-form-field appearance="fill" class="w-100"
+                                    [hideRequiredMarker]="hideRequiredMarker">
+                                    <mat-label>{{'orders.room' | translate}}</mat-label>
+                                    <input formControlName="room_no" matInput
+                                        placeholder="{{'orders.room' | translate}}" />
+                                    <mat-error *ngIf="orderForm.controls.floor_no.hasError('required')">
+                                        {{'orders.room' | translate}} {{'required' | translate}}
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <!-- Customer name -->
+                            <div class="col-md-4">
+                                <mat-form-field appearance="fill" class="w-100"
+                                    [hideRequiredMarker]="hideRequiredMarker">
+                                    <mat-label> {{'orders.requestername'| translate}}</mat-label>
+                                    <input formControlName="customer_name" matInput
+                                        placeholder=" {{'orders.requestername'| translate}}" />
+                                    <mat-error *ngIf="orderForm.controls.customer_name.hasError('required')">
+                                        {{'orders.requestername'| translate}} {{'required' | translate}}
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <!-- Customer Phone -->
+                            <div class="col-md-4">
+                                <mat-form-field appearance="fill" class="w-100"
+                                    [hideRequiredMarker]="hideRequiredMarker">
+                                    <mat-label> {{'orders.mobile'| translate}}</mat-label>
+                                    <input formControlName="customer_phone" matInput
+                                        placeholder=" {{'orders.mobile'| translate}}" />
+                                    <mat-error *ngIf="orderForm.controls.customer_phone.hasError('required')">
+                                        {{'orders.mobile'| translate}} {{'required' | translate}}
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <!-- Equipment -->
+                            <div class="col-md-4">
+                                <mat-form-field class="w-100" [hideRequiredMarker]="hideRequiredMarker">
+                                    <mat-label>{{'orders.equipment'| translate}}</mat-label>
+                                    <mat-select formControlName="equipment_id">
+                                        <mat-option *ngFor="let item of equipment" [value]="item.id">
+                                            {{item.name}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <!-- Source -->
+                            <div class="col-md-4">
+                                <mat-form-field class="w-100" [hideRequiredMarker]="hideRequiredMarker">
+                                    <mat-label>{{'orders.source'| translate}}</mat-label>
+                                    <mat-select formControlName="source_id">
+                                        <mat-option *ngFor="let item of source" [value]="item.id">
+                                            {{item.name}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <!-- Description -->
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <mat-form-field class="example-full-width">
+                                        <mat-label>{{'orders.description'|translate}}</mat-label>
+                                        <textarea formControlName="description" matInput
+                                            placeholder="Ex. It makes me feel..."></textarea>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center mt-3 d-flex justify-content-between">
+                            <button type="button" class="outline-secondary w-25"
+                                routerLink="/dashboard/admin/work-orders">{{'cancel'|translate}}</button>
+                            <button class="primary text-center w-25" [disabled]="orderForm.invalid">{{'save'|translate}}</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

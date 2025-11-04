@@ -1,0 +1,28 @@
+<section>
+    <h1 mat-dialog-title class="w-100 bg-orange text-white">
+      {{'users.block_unblock' | translate}}
+    </h1>
+    <div mat-dialog-content>
+      <span class="text-center d-block my-3 fs-3"
+        ><i class="fa-solid fa-ban text-danger fs-3"></i
+      ></span>
+      <p class="m-3">
+        {{'users.blockmsg'| translate}} {{ data.is_active==1 ? ('users.block'|translate) : ('users.unBlock'|translate) }}
+        <span class="text-danger">{{ data.name }} </span>?
+       </p>
+    </div>
+    <div mat-dialog-actions class="d-flex justify-content-between">
+      <button
+        class="btn bg-danger mb-2 text-white"
+        mat-button
+        [mat-dialog-close]="data.id"
+        cdkFocusInitial
+      >
+        {{ data.is_active==1 ? ('users.block'|translate) : ('users.unBlock'|translate) }}
+      </button>
+      <button class="btn mb-2 btn-secondary" mat-button (click)="onNoClick()">
+        {{'cancel'|translate}}
+      </button>
+    </div>
+  </section>
+  

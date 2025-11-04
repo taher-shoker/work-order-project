@@ -1,0 +1,37 @@
+<section >
+    <!-- Admin Section -->
+    <div class="admin-section">
+        <div class="admin-wrapper align-ietem-center">
+            <img src="../../../assets/images/logo.png" alt="Admin Image" class="admin-image" />
+
+        </div>
+
+    </div>
+    <div class="admin-info py-3 text-center">
+        <button>admin</button>
+        <!-- <span class="admin-name">{{ name }}</span> -->
+        <!-- <span class="admin-email">{{ email }}</span> -->
+        <!-- <span class="admin-role">{{ role }}</span> -->
+        <!--  -->
+    </div>
+    <div class="menue">
+        <h2 class="mx-4">{{'sidebar.menue' | translate }}</h2>
+        <div class="menue-content container-fluid">
+            <ng-container *ngFor="let item of menu">
+                <a [routerLink]="item.link" routerLinkActive="active" *ngIf="item.isActive" #homeLink="routerLinkActive" class="mt-2">
+                    <div class="content">
+                        <div class="content-li py-2  d-flex justify-content-between align-items-center">
+                            <div class="item">
+                                <span class="p-3"><i [class]="item.icon"></i></span>
+                                <span>{{ item.title }}</span>
+                            </div>
+                            <div *ngIf="homeLink.isActive" class="vertical-divider d-flex align-items-center "></div>
+                        </div>
+                    </div>
+                </a>
+            </ng-container>
+
+        </div>
+    </div>
+
+</section>

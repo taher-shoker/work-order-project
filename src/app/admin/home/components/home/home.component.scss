@@ -1,0 +1,69 @@
+.all-orders {
+    border-radius: 24px;
+    border: 1px solid #F2F3F4;
+    padding: 16px;
+
+}
+.machines {
+    border-radius: 24px;
+    border: 1px solid #F2F3F4;
+    padding: 8px;
+
+}
+
+.col-md-3 h4,
+.col-md-4 h4,
+.col-md-5 h4,
+.col-md-10 h4,
+.col h4 {
+    font-size: 16px;
+    font-weight: 500;
+    color: #192A3E;
+}
+
+
+
+i {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #05A0E1;
+    border: 1px solid #F2F3F4;
+    border-radius: 24px;
+    width: 30px;
+    height: 30px;
+    padding: 22px;
+    font-size: 20px;
+    line-height: 1;
+}
+
+
+
+.image {
+    width: 60px;
+    height: 60px;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #eee;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.image img {
+    width: 100%;
+    height: auto;
+}
+
+.qr img {
+    width: 60px;
+    height: 60px;
+}
+  .vertical-divider {
+  width: 2px;            
+  height: 40px;           
+  background: #E5E5EF;       
+  display: inline-block; 
+  vertical-align: middle;
+  border-radius: 1px;    
+}

@@ -1,0 +1,128 @@
+// @import "../../../../../assets/styles/abstracts/variables";
+section {
+    height: 100vh;
+
+    .container {
+        padding: 3rem 3rem 1rem 4rem;
+
+        .content {
+
+            h2 {
+                font-weight: 500;
+                font-size: 26px;
+                color: #191919;
+
+
+            }
+
+            p {
+                font-size: 16px;
+                line-height: 100%;
+                white-space: pre-line;
+                color: #191919;
+
+
+
+                a {
+                    background: #05A0E1;
+                    font-weight: 500;
+                    size: 14px;
+                }
+            }
+
+            form {
+                a {
+                    // color: $color-tertiary;
+                }
+
+                label {
+                    size: 16px;
+                    line-height: 100%;
+                    padding: 16px 8px;
+                }
+
+                input {
+                    border-radius: 12px;
+                    border-color: #D6D9DD;
+                    padding: 12px 8px;
+                    size: 14px;
+                }
+
+                input::placeholder {
+                    font-size: 14px;
+                    color: #7C8391;
+                    padding: 12px 8px;
+
+                }
+            }
+        }
+    }
+
+    .col-md-5 {
+        &.image {
+            background-image: url(../../../../assets/images/login-bg.jpg);
+            background-position: center center;
+            background-size: cover;
+
+            //    border-radius: 15px;
+
+        }
+
+        .image-content {
+            // color: white !important;
+            text-align: center;
+            margin-bottom: 50px;
+            background-color: #FFFFFF33;
+            border-radius: 16px;
+            padding: 16px;
+
+            h6 {
+                font-size: 20px;
+                font-style: Medium;
+                color: #191919;
+                font-weight: 500;
+
+            }
+
+            span {
+                font-size: 15px;
+                color: #191919;
+                font-weight: 400;
+                width: 253px;
+                height: 44px;
+                white-space: pre-line;
+            }
+        }
+    }
+
+}
+
+@media (max-width:768px) {
+
+    .col-md-6 {
+        &.image {
+            background-image: none !important;
+
+            .image-content {
+                display: none;
+            }
+        }
+    }
+
+    .col-md-3 {
+        width: 50%;
+    }
+}
+
+.logo {
+    width: 15%;
+}
+
+
+
+
+.eye-icon{
+    position: absolute;
+    left: 20px;
+    top: 46px;
+}
