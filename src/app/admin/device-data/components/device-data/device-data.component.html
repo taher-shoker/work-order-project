@@ -8,44 +8,20 @@
             </div>
         </div>
         <div class="px-4">
-            <div class="shadow border p-3 rounded-4">
+            <div>
                 <p class="bg-title fw-bold">{{'sidebar.devices_information' | translate}}</p>
-
-                <form>
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="mb-3">
-                                <label for="exampleFormControlInput1" class="form-label">{{'devices.device_type' |
-                                    translate}}</label>
-                                <input type="text" class="form-control" id="exampleFormControlInput1"
-                                    [placeholder]="this.translate.instant('devices.enter_device_type')" />
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="mb-3">
-                                <label for="exampleFormControlInput1" class="form-label">{{'devices.model' |
-                                    translate}}</label>
-                                <input type="text" class="form-control" id="exampleFormControlInput1"
-                                    [placeholder]="this.translate.instant('devices.enter_model')" />
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="mb-3">
-                                <label for="exampleFormControlInput1" class="form-label">{{'devices.manufacturer' |
-                                    translate}}</label>
-                                <input type="text" class="form-control" id="exampleFormControlInput1"
-                                    [placeholder]="this.translate.instant('devices.enter_manufacturer')" />
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="text-center mt-3 d-flex justify-content-end">
-                        <button type="button" class="btn btn-light mx-2 px-5"
-                            routerLink="/dashboard/admin/devices">{{'devices.cancel'|translate}}</button>
-                        <button
-                            class="btn btn-primary text-center px-5">{{'devices.add_information'|translate}}</button>
-                    </div>
-                </form>
+            </div>
+            <div class="mt-2 shadow border p-3 rounded-4 bg-device">
+                <p>{{'devices.manufacturer'|translate}}</p>
+                <app-manufacturers></app-manufacturers>
+            </div>
+            <div class="mt-2 shadow border p-3 rounded-4 bg-device">
+                <p>{{'devices.model'|translate}}</p>
+                <app-device-model></app-device-model>
+            </div>
+            <div class="mt-2 shadow border p-3 rounded-4 bg-device">
+                <p>{{'devices.type'|translate}}</p>
+                <app-device-type></app-device-type>
             </div>
         </div>
     </div>

@@ -27,10 +27,14 @@ export class DevicesService {
     return this._HttpClient.get(`work-orders/orders_by_device/${id}`);
   }
 
-  // // Lookups
-  // onGetAccountType(): Observable<any> {
-  //   return this._HttpClient.get('work-orders/lookups/titles');
+  // onGetDeviceType(data:any): Observable<any> {
+  //   return this._HttpClient.post('devices/lookups',{type:data});
   // }
+
+  onGetCustodians(): Observable<any> {
+    return this._HttpClient.get('auth/get_custodians/10');
+  }
+
   onGetDepartment(): Observable<any> {
     return this._HttpClient.get('departments');
   }
@@ -42,9 +46,6 @@ export class DevicesService {
   }
   onGetDeviceType(): Observable<any> {
     return this._HttpClient.get('device_types');
-  }
-  onGetCustodians(): Observable<any> {
-    return this._HttpClient.get('auth/get_custodians/10');
   }
   onGetDeviceStatus(): Observable<any> {
     return this._HttpClient.get('device_statuses');

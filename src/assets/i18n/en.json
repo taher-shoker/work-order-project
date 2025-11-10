@@ -251,6 +251,16 @@
         "code": "Code number (optional)",
         "code_number": "Code number",
         "manufacturer": "Manufacturer",
+        "manufacturers_list": "List of manufacturers",
+        "models_list": "List of models",
+        "types_list": "List of device type",
+        "add_information": "Add a new company",
+        "edit_information": "Edit Company",
+        "add_model": "Add a new model",
+        "edit_model": "Edit Model",
+        "add_type": "Add a new device type",
+        "edit_type": "Edit device type",
+        "delete_all": "Delete ALl",
         "model": "model",
         "serial_number": "serial_number",
         "description_ar": "description",
@@ -258,10 +268,12 @@
         "confirm": "Added",
         "confirm_add": "A device was successfully added.",
         "custodians": "Custodians",
-        "add_information": "Add",
         "cancel": "Cancel",
         "enter_device_type": "Enter the device type.",
         "enter_model": "Enter the model/template.",
-        "enter_manufacturer": "Enter the manufacturer."
+        "enter_manufacturer": "Enter the manufacturer.",
+        "delete_item": "Delete this item",
+        "sure_delete": "Are you sure to delete ",
+        "delete": "Delete"
     }
 }
