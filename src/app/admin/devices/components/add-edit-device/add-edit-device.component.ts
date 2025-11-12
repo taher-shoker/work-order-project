@@ -40,7 +40,7 @@ export class AddEditDeviceComponent {
 
   constructor(
     private _activateRoute: ActivatedRoute,
-    private _DevicesService: DevicesService,
+    private devicesService: DevicesService,
     private _ToastrService: ToastrService,
     private _Router: Router, public dialog: MatDialog
   ) {
@@ -55,11 +55,18 @@ export class AddEditDeviceComponent {
 
   ngOnInit() {
     this.getDeviceById(this.deviceId)
+    this.getCustodians();
+
+    // this.getDeviceType('models');
+    // this.getDeviceType('manufacturers');
+    // this.getDeviceType('types');
+    // this.getDeviceType('departments');
+    // this.getDeviceType('statuses');
+
     this.getDepartment();
     this.getDeviceModel();
     this.getDeviceManufacturers();
     this.getDeviceTypes();
-    this.getCustodians();
     this.getDeviceStatus();
   }
 
@@ -90,7 +97,7 @@ export class AddEditDeviceComponent {
         myData.append(key, data.value[key]);
       }
 
-      this._DevicesService.onEditDevice(data.value, this.deviceId).subscribe({
+      this.devicesService.onEditDevice(data.value, this.deviceId).subscribe({
         next: (res) => {
           console.log(data.value)
           this._ToastrService.success('Device Updated Succesfuly');
@@ -113,7 +120,7 @@ export class AddEditDeviceComponent {
       }
       myData.append('buy_date', data.value.buy_date.toISOString().slice(0, 10));
 
-      this._DevicesService.addNewDevice(myData).subscribe({
+      this.devicesService.addNewDevice(myData).subscribe({
         next: (res) => {
           // this.data = res
           // console.log(res.message)
@@ -134,7 +141,7 @@ export class AddEditDeviceComponent {
   }
 
   getDeviceById(id: number) {
-    this._DevicesService.getDevice(id).subscribe(
+    this.devicesService.getDevice(id).subscribe(
       (res) => {
         this.currentDevice = res.data;
         // console.log(this.currentDevice)
@@ -166,45 +173,59 @@ export class AddEditDeviceComponent {
     });
   }
 
+  // getDeviceType(data: any): void {
+  //   this.devicesService.onGetDeviceType(data).subscribe({
+  //     next: (res) => {
+  //       console.log(res);
+  //       this.departments = res.data;
+  //       this.devicesModel = res.data;
+  //       this.manufacturers = res.data;
+  //       this.deviceTypes = res.data;
+  //       this.deviceStatus = res.data;
+  //     }
+  //   })
+  // }
+
+  getCustodians() {
+    this.devicesService.onGetCustodians().subscribe({
+      next: (res) => {
+        this.custodiansList = res.data;
+        console.log(this.custodiansList);
+      }
+    });
+  }
+
   getDepartment() {
-    this._DevicesService.onGetDepartment().subscribe(
+    this.devicesService.onGetDepartment().subscribe(
       (res) => {
         this.departments = res.data;
       }
     )
   }
   getDeviceModel() {
-    this._DevicesService.onGetDeviceModel().subscribe({
+    this.devicesService.onGetDeviceModel().subscribe({
       next: (res) => {
         this.devicesModel = res.data;
       }
     });
   }
   getDeviceManufacturers() {
-    this._DevicesService.onGetDeviceManufacturers().subscribe({
+    this.devicesService.onGetDeviceManufacturers().subscribe({
       next: (res) => {
         this.manufacturers = res.data;
       }
     });
   }
   getDeviceTypes() {
-    this._DevicesService.onGetDeviceType().subscribe({
+    this.devicesService.onGetDeviceType().subscribe({
       next: (res) => {
         this.deviceTypes = res.data;
       }
     });
   }
-  getCustodians() {
-    this._DevicesService.onGetCustodians().subscribe({
-      next: (res) => {
-        this.custodiansList = res.data;
-        console.log(this.custodiansList);
-        
-      }
-    });
-  }
+
   getDeviceStatus() {
-    this._DevicesService.onGetDeviceStatus().subscribe({
+    this.devicesService.onGetDeviceStatus().subscribe({
       next: (res) => {
         this.deviceStatus = res.data;
       }
