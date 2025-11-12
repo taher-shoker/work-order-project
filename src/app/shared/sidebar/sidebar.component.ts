@@ -4,7 +4,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { HelperService } from 'src/app/services/helper.service';
 
-
 interface Imenu {
   title: string;
   icon: string;
@@ -15,154 +14,150 @@ interface Imenu {
 @Component({
   selector: 'app-sidebar',
   templateUrl: './sidebar.component.html',
-  styleUrls: ['./sidebar.component.scss']
+  styleUrls: ['./sidebar.component.scss'],
 })
-
-
-
 export class SidebarComponent {
   @Output() isOpenedflag = new EventEmitter<boolean>();
   isOpened: boolean = true;
 
-  name: string | null = '';
-  email: string | null = '';
+  name: string = '';
+  email: string = '';
   role: string | null = '';
   ngOnInit() {
-    this.name = localStorage.getItem('name');
-    this.email = localStorage.getItem('email');
     this.role = this._AuthService.title || localStorage.getItem('role');
 
+    this._AuthService.user$.subscribe((user) => {
+      if (user) {
+        this.name = user?.name;
+        this.email = user?.email;
+        this.role = user.title.name;
+      }
+    });
+    // console.log(this._AuthService.title);
     // توجيه المستخدم بناءً على الدور
-    if (this.isAdmin()) {
-      this._Router.navigate(['/dashboard/admin/home']);
-    } else if (this.isEngineer()) {
-      this._Router.navigate(['/dashboard/engineer/home']);
-    } else {
-      this._Router.navigate(['/dashboard/technicians/home']);
-    }
+    // if (this._AuthService.isAdmin()) {
+    //   this._Router.navigate(['/dashboard/home']);
+    // } else if (this._AuthService.isEngineer()) {
+    //   this._Router.navigate(['/dashboard/home']);
+    // } else {
+    //   this._Router.navigate(['/dashboard/home']);
+    // }
   }
 
   constructor(
     public translate: TranslateService,
     public _HelperService: HelperService,
     private _Router: Router,
-    private _AuthService: AuthService
-  ) { }
+    public _AuthService: AuthService
+  ) {}
   toggleSidebar() {
     this.isOpened = !this.isOpened;
     this.isOpenedflag.emit(this.isOpened);
   }
-  isAdmin(): boolean {
-    return this._AuthService.title === 'ادمن';
-  }
 
-  isEngineer(): boolean {
-    return this._AuthService.title === 'Engineer';
-  }
-
-  isTechnician(): boolean {
-    return (
-      this._AuthService.title === 'Technician' ||
-      this._AuthService.title === 'Worker'
-    );
-  }
   menu: Imenu[] = [
+    // ===== Common Home =====
     {
       icon: 'fa-regular fa-house fs-4',
-      title: this.translate.instant('sidebar.home'),
-      link: '/dashboard/admin/home',
-      isActive: this.isAdmin(),
+      title: 'sidebar.home',
+      link: '/dashboard/home',
+      isActive: this._AuthService.isAdmin(),
     },
     {
       icon: 'fa-regular fa-house fs-4',
-      title: this.translate.instant('sidebar.home'),
-      link: '/dashboard/engineer/home',
-      isActive: this.isEngineer(),
+      title: 'sidebar.home',
+      link: '/dashboard/home',
+      isActive: this._AuthService.isEngineer(),
     },
     {
       icon: 'fa-regular fa-house fs-4',
-      title: this.translate.instant('sidebar.home'),
-      link: '/dashboard/technicians/home',
-      isActive: this.isTechnician(),
+      title: 'sidebar.home',
+      link: '/dashboard/home',
+      isActive: this._AuthService.isTechnician(),
     },
+
+    // ===== Admin Section =====
     {
       icon: 'fa-solid fa-layer-group fs-4',
-      title: this.translate.instant('sidebar.workOrders'),
-      link: '/dashboard/admin/work-orders',
-      isActive: this.isAdmin(),
+      title: 'sidebar.workOrders',
+      link: '/dashboard/work-orders',
+      isActive: this._AuthService.isAdmin(),
     },
     {
       icon: 'fa-solid fa-users fs-4',
-      title: this.translate.instant('sidebar.users'),
-      link: '/dashboard/admin/users',
-      isActive: this.isAdmin(),
+      title: 'sidebar.users',
+      link: '/dashboard/users',
+      isActive: this._AuthService.isAdmin(),
     },
     {
       icon: 'fa-solid fa-toolbox fs-4',
-      title: this.translate.instant('sidebar.devices'),
-      link: '/dashboard/admin/devices',
-      isActive: this.isAdmin(),
+      title: 'sidebar.devices',
+      link: '/dashboard/devices',
+      isActive: this._AuthService.isAdmin(),
     },
     {
       icon: 'fa-solid fa-toolbox fs-4',
-      title: this.translate.instant('sidebar.devices_information'),
-      link: '/dashboard/admin/device-data',
-      isActive: this.isAdmin(),
+      title: 'sidebar.devices_information',
+      link: '/dashboard/device-data',
+      isActive: this._AuthService.isAdmin(),
     },
     {
       icon: 'fa-solid fa-sitemap fs-4',
-      title: this.translate.instant('sidebar.departments'),
-      link: '/dashboard/admin/departments',
-      isActive: this.isAdmin(),
+      title: 'sidebar.departments',
+      link: '/dashboard/departments',
+      isActive: this._AuthService.isAdmin(),
     },
     {
       icon: 'fa-solid fa-building fs-4',
-      title: this.translate.instant('sidebar.building'),
-      link: '/dashboard/admin/building',
-      isActive: this.isAdmin(),
+      title: 'sidebar.building',
+      link: '/dashboard/building',
+      isActive: this._AuthService.isAdmin(),
     },
     {
       icon: 'fa-solid fa-globe fs-4',
-      title: this.translate.instant('sidebar.sources'),
-      link: '/dashboard/admin/sources',
-      isActive: this.isAdmin(),
+      title: 'sidebar.sources',
+      link: '/dashboard/sources',
+      isActive: this._AuthService.isAdmin(),
     },
     {
       icon: 'fa-solid fa-toolbox fs-4',
-      title: this.translate.instant('sidebar.equipments'),
-      link: '/dashboard/admin/equipments',
-      isActive: this.isAdmin(),
+      title: 'sidebar.equipments',
+      link: '/dashboard/equipments',
+      isActive: this._AuthService.isAdmin(),
     },
     {
       icon: 'fa-solid fa-receipt fs-4',
-      title: this.translate.instant('sidebar.reports'),
-      link: '/dashboard/admin/reports',
-      isActive: this.isAdmin(),
+      title: 'sidebar.reports',
+      link: '/dashboard/reports',
+      isActive: this._AuthService.isAdmin(),
     },
 
+    // ===== Engineer Section =====
     {
       icon: 'fa-solid fa-layer-group fs-4',
-      title: this.translate.instant('sidebar.myorders'),
-      link: '/dashboard/engineer/work-orders',
-      isActive: this.isEngineer(),
+      title: 'sidebar.myorders',
+      link: '/dashboard/work-orders',
+      isActive: this._AuthService.isEngineer(),
     },
     {
       icon: 'fa-solid fa-toolbox fs-4',
-      title: this.translate.instant('sidebar.devices'),
-      link: '/dashboard/engineer/devices',
-      isActive: this.isEngineer(),
+      title: 'sidebar.devices',
+      link: '/dashboard/devices',
+      isActive: this._AuthService.isEngineer(),
     },
+
+    // ===== Technician Section =====
     {
-      icon: 'fa-solid fa-house fs-4',
-      title: this.translate.instant('sidebar.myorders'),
-      link: '/dashboard/technicians/work-orders',
-      isActive: this.isTechnician(),
+      icon: 'fa-solid fa-layer-group fs-4',
+      title: 'sidebar.myorders',
+      link: '/dashboard/work-orders',
+      isActive: this._AuthService.isTechnician(),
     },
     {
       icon: 'fa-solid fa-toolbox fs-4',
-      title: this.translate.instant('sidebar.devices'),
-      link: '/dashboard/technicians/devices',
-      isActive: this.isEngineer(),
+      title: 'sidebar.devices',
+      link: '/dashboard/devices',
+      isActive: this._AuthService.isTechnician(),
     },
   ];
 }

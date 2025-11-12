@@ -3,31 +3,22 @@ import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 
 const routes: Routes = [
-
   {
-    path: '', component: DashboardComponent, children: [
-
+    path: '',
+    component: DashboardComponent,
+    children: [
       {
-        path: "admin",
+        path: '',
         // canActivate: [AdminGuard],
-        loadChildren: () => import('../admin/admin.module').then(m => m.AdminModule)
+        loadChildren: () =>
+          import('../admin/admin.module').then((m) => m.AdminModule),
       },
-      {
-        path: "engineer",
-        // canActivate: [EngineerGuard],
-        loadChildren: () => import('../engineer/engineer.module').then(m => m.EngineerModule)
-      },
-      {
-        path: "technicians",
-        // canActivate: [TechnicianGuard],
-        loadChildren: () => import('../technicians/technicians.module').then(m => m.TechniciansModule)
-      }
-    ]
-  }
+    ],
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class DashboardRoutingModule { }
+export class DashboardRoutingModule {}

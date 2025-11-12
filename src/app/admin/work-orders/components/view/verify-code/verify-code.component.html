@@ -1,0 +1,17 @@
+<section class="close-popup">
+  <h2>{{'confirmation.title' |translate}}</h2>
+  <p>{{'confirmation.des' | translate}}</p>
+  <div class="
+">
+    <ng-otp-input (onInputChange)="onOtpChange($event)"
+      [config]="{ length: 4,allowNumbersOnly:true ,containerClass:'custom-inputs'}" #otpComp></ng-otp-input>
+
+  </div>
+  <div class="btn">
+    <button type="button" class="primary text-center w-25" [disabled]="codeValue.length < 4"
+      (click)="submitOtp()">{{'confirmation.confirm'|translate}}</button>
+    <button type="button" (click)="dialogRef.close()"
+      class="primary text-center w-25">{{'confirmation.cancel'|translate}}</button>
+
+  </div>
+</section>

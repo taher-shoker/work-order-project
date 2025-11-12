@@ -25,9 +25,6 @@
 
 // }
 
-
-
-
 // import { inject } from '@angular/core';
 // import { Router, CanActivateFn } from '@angular/router';
 
@@ -49,30 +46,51 @@
 //     }
 // };
 
+// import { inject } from '@angular/core';
+// import { Router, UrlSegment, CanMatchFn, Route } from '@angular/router';
+// // console.log('🧩 auth.guard.ts LOADED'); // يتحقق لو الملف نفسه انقرأ
 
+// export const authGuard: CanMatchFn  = (route: Route, segments: UrlSegment[]) => {
+//   // console.log('🔥 authGuard triggered');
 
+//   const router = inject(Router);
+//   const token = localStorage.getItem('token');
 
+//   const attemptedUrl = '/' + segments.map(seg => seg.path).join('/');
 
-import { inject } from '@angular/core';
-import { Router, UrlSegment, CanMatchFn, Route } from '@angular/router';
-// console.log('🧩 auth.guard.ts LOADED'); // يتحقق لو الملف نفسه انقرأ
+//   if (token) {
+//     // localStorage.setItem('redirectUrl', attemptedUrl);
+//     // console.log('✅ Authorized:', attemptedUrl);
+//     return true;
+//   } else {
+//     console.log('🚫 Not authorized, redirecting to auth. URL:', attemptedUrl);
+//     localStorage.setItem('redirectUrl', attemptedUrl);
+//     router.navigate(['auth']);
+//     return false;
+//   }
+// };
 
-export const authGuard: CanMatchFn  = (route: Route, segments: UrlSegment[]) => {
-  // console.log('🔥 authGuard triggered');
-
-  const router = inject(Router);
-  const token = localStorage.getItem('token');
-
-  const attemptedUrl = '/' + segments.map(seg => seg.path).join('/');
-
-  if (token) {
-    // localStorage.setItem('redirectUrl', attemptedUrl);
-    // console.log('✅ Authorized:', attemptedUrl);
+import { Injectable } from '@angular/core';
+import {
+  ActivatedRouteSnapshot,
+  RouterStateSnapshot,
+  Router,
+  UrlTree,
+} from '@angular/router';
+import { Observable } from 'rxjs';
+import { AuthService } from '../auth/services/auth.service';
+@Injectable({
+  providedIn: 'root',
+})
+export class AuthGuard {
+  constructor(public authService: AuthService, public router: Router) {}
+  canActivate(
+    next: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot
+  ): Observable<boolean> | Promise<boolean> | UrlTree | boolean {
+    if (this.authService.isAuthorizedUser() !== true) {
+      this.router.navigate(['login']);
+    }
     return true;
-  } else {
-    console.log('🚫 Not authorized, redirecting to auth. URL:', attemptedUrl);
-    localStorage.setItem('redirectUrl', attemptedUrl);
-    router.navigate(['auth']);
-    return false;
   }
-};
+}

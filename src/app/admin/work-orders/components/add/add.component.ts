@@ -7,6 +7,7 @@ import { WorkOrdersService } from '../../services/work-orders.service';
 import { LookupsService } from 'src/app/services/lookups.service';
 import { HelperService } from 'src/app/services/helper.service';
 import { DevicesService } from 'src/app/admin/devices/services/devices.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 // ✅ Strongly typed interfaces
 interface LookupItem {
@@ -81,7 +82,8 @@ export class AddComponent implements OnInit {
     private lookupsService: LookupsService,
     private toastr: ToastrService,
     private helperService: HelperService,
-    private devicesService: DevicesService
+    private devicesService: DevicesService,
+    private spinner: NgxSpinnerService
   ) {
     this.deviceId = this.route.snapshot.paramMap.get('deviceId');
     this.orderId = this.route.snapshot.paramMap.get('id');
@@ -241,10 +243,20 @@ export class AddComponent implements OnInit {
     console.log(event);
     //this.loadEngineers();
   }
+
   private loadEngineers(deptId: number): void {
-    this.helperService
-      .getEngineers(deptId)
-      .subscribe((res) => (this.engineers = res.data));
+    this.helperService.getEngineers(deptId).subscribe({
+      next: (res) => {
+        this.engineers = res.data;
+        this.spinner.hide();
+      },
+      error: (err) => {
+        console.error('Error loading engineers:', err);
+      },
+      complete: () => {
+        console.log('Engineers loaded successfully.');
+      },
+    });
   }
 
   private loadTechnicians(deptId: number): void {

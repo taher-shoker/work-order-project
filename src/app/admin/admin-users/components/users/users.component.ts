@@ -1,4 +1,116 @@
-import { Component } from '@angular/core';
+// import { Component } from '@angular/core';
+// import { MatDialog } from '@angular/material/dialog';
+// import { PageEvent } from '@angular/material/paginator';
+// import { NgxSpinnerService } from 'ngx-spinner';
+// import { ToastrService } from 'ngx-toastr';
+// import { debounceTime, Subject } from 'rxjs';
+// import { UsersService } from 'src/app/admin/services/users.service';
+// import { BlockUsersComponent } from './block-users/block-users.component';
+// import { ViewUserComponent } from '../view-user/view-user.component';
+
+// @Component({
+//   selector: 'app-users',
+//   templateUrl: './users.component.html',
+//   styleUrls: ['./users.component.scss'],
+// })
+// export class UsersComponent {
+//   tableResponse: any | undefined;
+//   tableData: any[] | undefined = [];
+//   pageSize: number | undefined = 5;
+//   page: number | undefined = 1;
+//   pageIndex: number = 0;
+//   user_id: number = 0;
+
+//   private subject = new Subject<any>();
+//   constructor(
+//     private _UsersService: UsersService,
+//     private _ToastrService: ToastrService,
+//     private spinner: NgxSpinnerService,
+//     public dialog: MatDialog
+//   ) {}
+
+//   ngOnInit(): void {
+//     this.onGetAllUsers();
+//     this.subject.pipe(debounceTime(800)).subscribe({
+//       next: (res) => {
+//         this.onGetAllUsers();
+//       },
+//     });
+//   }
+//   onGetAllUsers() {
+//     let params = {
+//       page_size: this.pageSize,
+//       page: this.page,
+//       // userName: this.searchValue,
+//     };
+//     this.spinner.show();
+//     this._UsersService.getAllUsers(params).subscribe({
+//       next: (res) => {
+//         this.tableResponse = res;
+//         this.tableData = res?.data;
+//         // console.log(this.tableResponse.meta.total);
+//         console.log(this.tableData);
+//         this.spinner.hide();
+//       },
+//       error: (err) => {},
+//       complete: () => {},
+//     });
+//   }
+//   handlePageEvent(e: PageEvent) {
+//     console.log(e);
+//     this.pageSize = e.pageSize;
+//     this.page = e.pageIndex + 1;
+//     this.onGetAllUsers();
+//   }
+
+//   openBlockDialog(item: any) {
+//     const dialogRef = this.dialog.open(BlockUsersComponent, {
+//       data: item,
+//     });
+
+//     dialogRef.afterClosed().subscribe((result) => {
+//       console.log('The dialog was closed', result);
+//       // result = this.user_id
+//       if (result) {
+//         this.onBlockUser({ user_id: result });
+//       }
+//     });
+//   }
+
+//   onBlockUser(id: any) {
+//     // let params = {user_id:id}
+//     this._UsersService.onBlockOrUnblockUser(id).subscribe({
+//       next: (res) => {
+//         this._ToastrService.success(
+//           res.isActivated
+//             ? 'This user was Unblocked Successfully'
+//             : 'This user was blocked Successfully',
+//           'Done'
+//         );
+//       },
+//       error: (err) => {
+//         this._ToastrService.error('Can’t Block this User', 'Error');
+//       },
+//       complete: () => {
+//         this.onGetAllUsers();
+//       },
+//     });
+//   }
+//   openUserDialog(id: any) {
+//     const dialogRef = this.dialog.open(ViewUserComponent, {
+//       data: id,
+//       width: '60%',
+//       height: '95%',
+//     });
+//     dialogRef.afterClosed().subscribe((result) => {
+//       if (result) {
+//         this.onGetAllUsers();
+//       }
+//     });
+//   }
+// }
+
+import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -11,107 +123,96 @@ import { ViewUserComponent } from '../view-user/view-user.component';
 @Component({
   selector: 'app-users',
   templateUrl: './users.component.html',
-  styleUrls: ['./users.component.scss']
+  styleUrls: ['./users.component.scss'],
 })
+export class UsersComponent implements OnInit {
+  tableData: any[] = [];
+  tableResponse: any;
+  pageSize = 5;
+  pageIndex = 0;
 
-export class UsersComponent {
-  tableResponse: any | undefined;
-  tableData: any[] | undefined = [];
-  pageSize: number | undefined = 5;
-  page: number | undefined = 1;
-  pageIndex: number = 0;
-  user_id: number = 0
+  private reloadSubject = new Subject<void>();
 
-  private subject = new Subject<any>;
   constructor(
-    private _UsersService: UsersService,
-    private _ToastrService: ToastrService,
+    private usersService: UsersService,
+    private toastr: ToastrService,
     private spinner: NgxSpinnerService,
-    public dialog: MatDialog,
-
-  ) { }
+    private dialog: MatDialog
+  ) {}
 
   ngOnInit(): void {
-    this.onGetAllUsers();
-    this.subject.pipe((debounceTime(800))).subscribe({
-      next: (res) => {
-        this.onGetAllUsers()
-      },
-    })
+    this.loadUsers();
+
+    this.reloadSubject.pipe(debounceTime(800)).subscribe(() => {
+      this.loadUsers();
+    });
   }
-  onGetAllUsers() {
-    let params = {
+
+  /** ✅ Fetch all users with pagination */
+  loadUsers(): void {
+    const params = {
       page_size: this.pageSize,
-      page: this.page,
-      // userName: this.searchValue,
+      page: this.pageIndex + 1,
     };
-    this.spinner.show()
-    this._UsersService.getAllUsers(params).subscribe({
-      next: (res) => {
 
+    this.spinner.show();
+    this.usersService.getAllUsers(params).subscribe({
+      next: (res) => {
         this.tableResponse = res;
-        this.tableData = res?.data;
-        // console.log(this.tableResponse.meta.total);
-        console.log(this.tableData)
-        this.spinner.hide()
+        this.tableData = res?.data || [];
+        this.spinner.hide();
       },
-      error: (err) => { },
-      complete: () => { },
+      error: () => {
+        this.spinner.hide();
+        this.toastr.error('Failed to load users', 'Error');
+      },
     });
   }
-  handlePageEvent(e: PageEvent) {
-    console.log(e);
-    this.pageSize = e.pageSize
-    this.page = e.pageIndex + 1
-    this.onGetAllUsers();
+
+  /** ✅ Handle pagination change */
+  onPageChange(event: PageEvent): void {
+    this.pageSize = event.pageSize;
+    this.pageIndex = event.pageIndex;
+    this.loadUsers();
   }
 
-  openBlockDialog(item: any) {
-    const dialogRef = this.dialog.open(BlockUsersComponent, {
-      data: item,
-    });
+  /** ✅ Open block/unblock user dialog */
+  openBlockDialog(user: any): void {
+    const dialogRef = this.dialog.open(BlockUsersComponent, { data: user });
 
-
-    dialogRef.afterClosed().subscribe((result) => {
-      console.log('The dialog was closed', result);
-      // result = this.user_id
-      if (result) {
-        this.onBlockUser({ user_id: result });
+    dialogRef.afterClosed().subscribe((userId: number | undefined) => {
+      if (userId) {
+        this.toggleUserBlock(userId);
       }
     });
   }
 
-  onBlockUser(id: any) {
-    // let params = {user_id:id}
-    this._UsersService.onBlockOrUnblockUser(id).subscribe({
+  /** ✅ Block or unblock a user */
+  private toggleUserBlock(userId: number): void {
+    this.usersService.onBlockOrUnblockUser({ user_id: userId }).subscribe({
       next: (res) => {
-        this._ToastrService.success(
-          res.isActivated
-            ? 'This user was Unblocked Successfully'
-            : 'This user was blocked Successfully',
-          'Done'
-        );
-
+        const message = res.isActivated
+          ? 'User unblocked successfully'
+          : 'User blocked successfully';
+        this.toastr.success(message, 'Success');
       },
-      error: (err) => {
-        this._ToastrService.error('Can’t Block this User', 'Error');
+      error: () => {
+        this.toastr.error('Failed to block or unblock user', 'Error');
       },
-      complete: () => {
-        this.onGetAllUsers();
-      },
+      complete: () => this.loadUsers(),
     });
   }
-  openUserDialog(id: any) {
-    const dialogRef = this.dialog.open(ViewUserComponent, {
-      data: id,
-      width: '60%',
-      height: '95%'
 
+  /** ✅ Open view user dialog */
+  openUserDialog(userId: number): void {
+    const dialogRef = this.dialog.open(ViewUserComponent, {
+      data: userId,
+      width: '60%',
+      height: '95%',
     });
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        // this.onGetAllUsers()
-      }
+
+    dialogRef.afterClosed().subscribe((updated: boolean) => {
+      this.loadUsers();
     });
   }
 }

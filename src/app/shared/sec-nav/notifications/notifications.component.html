@@ -1,0 +1,30 @@
+<div class="notifications-container">
+  <div class="header">
+    <div class="title">
+      <i class="fas fa-bell"></i>
+      <span>الإشعارات</span>
+    </div>
+  </div>
+
+  <div *ngIf="isLoading" class="loading">جارٍ تحميل الإشعارات...</div>
+
+  <div *ngIf="!isLoading && notifications.length === 0" class="empty">
+    لا توجد إشعارات حالياً
+  </div>
+
+  <div class="notifications-list" *ngIf="!isLoading && notifications.length > 0">
+    <div class="notification-card" *ngFor="let notif of notifications" [class.urgent]="notif.urgent">
+      <div class="time">{{ notif.timeAgo }}</div>
+      <div class="content">
+        <div class="info">
+          <div class="title">{{ notif.title }}</div>
+          <div class="message">{{ notif.message }}</div>
+          <a href="#" (click)="viewDetails(notif)">عرض التفاصيل &lt;&lt;</a>
+        </div>
+        <div class="icon">
+          <img [src]="notif.icon" alt="icon" />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

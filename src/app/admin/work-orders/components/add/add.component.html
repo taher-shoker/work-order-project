@@ -7,7 +7,7 @@
             <div class="col-md-6">
               <div class="title mb-2">
                 <span>{{'welcome' | translate}}</span>
-                <p><a routerLink="/dashboard/admin/work-orders">{{'orders.orders' | translate}}</a> > >
+                <p><a routerLink="/dashboard/work-orders">{{'orders.orders' | translate}}</a> > >
                   <span>{{ isUpdatePage ? ('orders.editOrder' | translate) : ('orders.addOrder' |
                     translate) }}</span>
                 </p>
@@ -183,7 +183,7 @@
             </div>
             <div class="text-center mt-3 d-flex justify-content-end">
               <button type="button" class="outline-secondary mx-2 "
-                routerLink="/dashboard/admin/work-orders">{{'cancel'|translate}}</button>
+                routerLink="/dashboard/work-orders">{{'cancel'|translate}}</button>
               <button class="primary text-center ">{{'save'|translate}}</button>
             </div>
           </form>

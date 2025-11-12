@@ -4,14 +4,16 @@ import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class HelperService {
   textDir: string = 'ltr';
   textPoint: string = 'text-start';
-  constructor(private _HttpClient: HttpClient,
-    public translate: TranslateService) { 
-      translate.onLangChange.subscribe((event: LangChangeEvent) => {
+  constructor(
+    private _HttpClient: HttpClient,
+    public translate: TranslateService
+  ) {
+    translate.onLangChange.subscribe((event: LangChangeEvent) => {
       // do something
       console.log(event.lang);
       if (event.lang === 'en') {
@@ -22,8 +24,8 @@ export class HelperService {
         this.textDir = 'rtl';
       }
     });
-    }
-      onChangeLang(lang: string) {
+  }
+  onChangeLang(lang: string) {
     localStorage.setItem('lang', lang);
     this.translate.use(lang);
     console.log(this.translate.currentLang);
@@ -35,10 +37,14 @@ export class HelperService {
     return this._HttpClient.get('auth/get_single_user');
   }
   getEngineers(id: number): Observable<any> {
-    return this._HttpClient.get(`auth/get_engineers/100/${id}`);
+    return this._HttpClient.get(`auth/get_engineers/100/${id}`, {
+      headers: { 'X-No-Spinner': 'true' },
+    });
   }
   getTechnicians(id: number): Observable<any> {
-    return this._HttpClient.get(`auth/get_technicians/100/${id}`);
+    return this._HttpClient.get(`auth/get_technicians/100/${id}`, {
+      headers: { 'X-No-Spinner': 'true' },
+    });
   }
   getSupervisor(id: number): Observable<any> {
     return this._HttpClient.get(`auth/get_technicians/100/${id}`);
@@ -49,10 +55,12 @@ export class HelperService {
   }
 
   getAllNotifications(): Observable<any> {
-    return this._HttpClient.get(`notifications`);
+    return this._HttpClient.get(`notifications`, {
+      headers: { 'X-No-Spinner': 'true' },
+    });
   }
 
-  MarkAsRead(id: number , data:number): Observable<any> {
-    return this._HttpClient.put(`notifications/mark_as_read/${id}`,data);
+  MarkAsRead(id: number, data: number): Observable<any> {
+    return this._HttpClient.put(`notifications/mark_as_read/${id}`, data);
   }
 }

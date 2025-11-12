@@ -2,11 +2,11 @@
   <div class="container py-5">
     <h4>{{'orders.quickSearch' | translate}}</h4>
     <!-- Filter -->
+    <div></div>
     <div class="card my-4">
       <div class="page-header">
         <form [formGroup]="reportForm" (ngSubmit)="onSubmit(reportForm)">
           <div class="row">
-            <!--  Status -->
             <div class="col-md-4">
               <div class="">
                 <mat-form-field [hideRequiredMarker]="hideRequiredMarker">
@@ -20,12 +20,10 @@
                 </mat-form-field>
               </div>
             </div>
-            <!--  Department -->
             <div class="col-md-4">
               <div class="">
                 <mat-form-field [hideRequiredMarker]="hideRequiredMarker">
                   <mat-label>{{'orders.department' | translate}}</mat-label>
-                  <!-- <mat-select (selectionChange)="onselectDepartment()" [(value)]="departmentId" -->
                   <mat-select formControlName="department_id">
                     <mat-option>None</mat-option>
                     <mat-option *ngFor="let item of departments" [value]="item.id">
@@ -35,7 +33,6 @@
                 </mat-form-field>
               </div>
             </div>
-            <!--  Engineer -->
             <div class="col-md-4">
               <mat-form-field [hideRequiredMarker]="hideRequiredMarker">
                 <mat-label>{{'orders.engineer' | translate}}</mat-label>
@@ -47,7 +44,6 @@
                 </mat-select>
               </mat-form-field>
             </div>
-            <!--  Technician -->
             <div class="col-md-4">
               <mat-form-field [hideRequiredMarker]="hideRequiredMarker">
                 <mat-label>{{'orders.technician' | translate}}</mat-label>
@@ -59,7 +55,6 @@
                 </mat-select>
               </mat-form-field>
             </div>
-            <!--  buildings -->
             <div class="col-md-4">
               <mat-form-field [hideRequiredMarker]="hideRequiredMarker">
                 <mat-label>{{'orders.building' | translate}}</mat-label>
@@ -72,7 +67,6 @@
                 </mat-select>
               </mat-form-field>
             </div>
-            <!--  workType -->
             <div class="col-md-4">
               <mat-form-field [hideRequiredMarker]="hideRequiredMarker">
                 <mat-label>{{'orders.workType' | translate}}</mat-label>
@@ -85,7 +79,6 @@
                 </mat-select>
               </mat-form-field>
             </div>
-            <!-- start Date -->
             <div class="col-md-4">
               <mat-form-field appearance="fill" class="example-full-width">
                 <mat-label>{{'reports.start' | translate}}</mat-label>
@@ -95,7 +88,6 @@
                 <mat-datepicker #picker3></mat-datepicker>
               </mat-form-field>
             </div>
-            <!-- end date -->
             <div class="col-md-4">
               <mat-form-field appearance="fill" class="example-full-width">
                 <mat-label>{{'reports.end' | translate}}</mat-label>
@@ -111,14 +103,11 @@
           </div>
         </form>
       </div>
-
     </div>
-    <!--  -->
     <h4>{{'orders.orders' | translate}}</h4>
     <div class="text-start mt-3 ">
       <button routerLink="add" class="primary text-center addbtn mx-4">{{'orders.addOrder'|translate}}</button>
     </div>
-    <!-- cards -->
     <div class="container">
       <div class="row my-3  gap-3 ">
         <div class="all-orders col d-flex ">
@@ -204,7 +193,7 @@
                 <mat-icon>more_vert</mat-icon>
               </button>
               <mat-menu #menu="matMenu">
-                <button mat-menu-item (click)="openOrderDialog(item.id)">
+                <button mat-menu-item [routerLink]="['view',item.id]">
                   <mat-icon style="color: #05A0E1;">visibility</mat-icon>
                   <span style="color: #05A0E1;">{{'users.view' | translate}}</span>
                 </button>

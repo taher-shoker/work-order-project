@@ -8,18 +8,8 @@ import { ViewComponent } from './components/view/view.component';
 import { AllComponent } from './components/all/all.component';
 import { SharedModule } from 'src/app/shared/shared.module';
 
-
 @NgModule({
-  declarations: [
-    AddComponent,
-    EditComponent,
-    ViewComponent,
-    AllComponent
-  ],
-  imports: [
-    CommonModule,
-    WorkOrdersRoutingModule,
-    SharedModule
-  ]
+  declarations: [AddComponent, EditComponent, ViewComponent, AllComponent],
+  imports: [CommonModule, WorkOrdersRoutingModule, SharedModule],
 })
-export class WorkOrdersModule { }
+export class WorkOrdersModule {}

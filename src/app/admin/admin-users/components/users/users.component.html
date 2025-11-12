@@ -12,7 +12,7 @@
         <div class="all-orders col d-flex ">
           <div class="col-md-10">
             <h4 style="color: #05A0E1;">{{'users.users' | translate}}</h4>
-            <h1>{{tableResponse.total}}</h1>
+            <h1>{{tableResponse?.total}}</h1>
           </div>
           <div class="col-md-2 icon text-start ">
             <i style="color: #05A0E1;" class="fa-solid fa-sitemap fs-4 rounded-circle"></i>
@@ -90,7 +90,7 @@
                     <span>{{ item.is_active ==1 ? ('users.block' | translate) : ('users.unBlock' | translate) }} </span>
                   </button>
 
-                  <button [routerLink]="['viewUser', item.id]" mat-menu-item (click)="openUserDialog(item.id)">
+                  <button mat-menu-item (click)="openUserDialog(item.id)">
                     <mat-icon style="color: #05A0E1;">visibility</mat-icon>
                     <span style="color: #05A0E1;">{{'users.view' | translate}}</span>
                   </button>
@@ -108,7 +108,7 @@
   </div>
   <!-- Pagination -->
   <div class="bg-info">
-    <mat-paginator #paginator class="demo-paginator" (page)="handlePageEvent($event)" [length]="tableResponse?.total"
+    <mat-paginator #paginator class="demo-paginator" (page)="onPageChange($event)" [length]="tableResponse?.total"
       [pageSize]="tableResponse?.pageSize" [pageSizeOptions]="[5, 10, 15, 20, 40, 100]" [pageIndex]="pageIndex"
       aria-label="Select page">
     </mat-paginator>

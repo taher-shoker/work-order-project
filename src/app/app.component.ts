@@ -1,41 +1,36 @@
-import { Component, HostListener } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { RouteInterceptorService } from './interceptors/route.interceptor';
+import { DirectionService } from './services/direction.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
 })
-
 export class AppComponent {
-  langu = localStorage.getItem('lang');
+  title = 'work_orders';
 
-constructor(public translate: TranslateService , public router:Router , private routeInterceptor: RouteInterceptorService) {
-  // const defaultLang = 'en';
-  if (localStorage.getItem('lang') == null) {
-    this.onChangeLang('ar')
-
+  constructor(
+    private translate: TranslateService,
+    private router: Router,
+    private routeInterceptor: RouteInterceptorService,
+    public directionService: DirectionService
+  ) {
+    this.initLanguage();
   }
-  this.onChangeLang('ar')
 
-}
+  /** Initialize app language */
+  private initLanguage(): void {
+    const savedLang = localStorage.getItem('lang') || 'ar';
+    this.setLanguage(savedLang);
+  }
 
-onChangeLang(lang: any) {
-  this.translate.setDefaultLang(lang)
-  this.translate.use(lang)
-  localStorage.setItem('lang', lang)
-
-
-}
-
-  // @HostListener('window:beforeunload', ['$event'])
-  // onBeforeUnload(event: Event) {
-  //   console.log('🔁 الصفحة بتعمل reload!');
-  //   // مثال: حفظ حالة المستخدم أو تنظيف بيانات
-  //   localStorage.setItem('reloaded', 'true');
-  // }
-
-title = 'work_orders';
+  /** Change app language and persist it */
+  setLanguage(lang: string): void {
+    this.translate.setDefaultLang(lang);
+    this.translate.use(lang);
+    localStorage.setItem('lang', lang);
+  }
 }

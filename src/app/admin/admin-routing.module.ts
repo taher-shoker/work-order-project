@@ -1,15 +1,15 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { HomeComponent } from './components/home/home.component';
+import { HomeComponent } from './home/home.component';
 
-const url :any = localStorage.getItem('attemptedUrl')
-console.log('ssssssss',url);
+const url: any = localStorage.getItem('attemptedUrl');
 
 const routes: Routes = [
-
-  { path: 'home', redirectTo: url, pathMatch: 'full' },
-
-  { path: 'home', component: HomeComponent },
+  {
+    path: 'home',
+    pathMatch: 'full',
+    component: HomeComponent,
+  },
 
   {
     path: 'users',
@@ -50,16 +50,12 @@ const routes: Routes = [
   {
     path: 'reports',
     loadChildren: () =>
-      import('./reports/reports.module').then(
-        (m) => m.ReportsModule
-      ),
+      import('./reports/reports.module').then((m) => m.ReportsModule),
   },
   {
     path: 'devices',
     loadChildren: () =>
-      import('./devices/devices.module').then(
-        (m) => m.DevicesModule
-      ),
+      import('./devices/devices.module').then((m) => m.DevicesModule),
   },
   {
     path: 'device-data',
@@ -68,11 +64,10 @@ const routes: Routes = [
         (m) => m.DeviceDataModule
       ),
   },
-
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AdminRoutingModule { }
+export class AdminRoutingModule {}

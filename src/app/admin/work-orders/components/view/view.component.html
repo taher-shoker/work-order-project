@@ -1,10 +1,24 @@
-<div [dir]="currentLang =='en' ? 'ltr' : 'rtl'">
-  <section>
-    <div class="container px-3 py-4">
+<section class="view-word-order">
+  <div class="container px-3 py-4">
+    <div class="row">
+      <div class="col-md-4 offset-md-8">
+        <div class="order-actions">
+          <ng-container *ngFor="let btnId of btnsToShow">
+            <button class="btn " (click)="onAction(btnId)">
+              {{ getLabel(btnId) | translate }}- {{btnId}}
+            </button>
+          </ng-container>
+
+
+        </div>
+      </div>
+
+
+
+    </div>
+    <div class="row">
       <div class="details-header d-flex  justify-content-between ">
         <h4>{{'orders.details'| translate}}</h4>
-        <span (click)="onClose()" class=" pointer px-2"><i style="color: #232931"
-            class="fa-solid fa-xmark fa-2x"></i></span>
       </div>
       <div class="d-flex  justify-content-between py-3">
         <div>
@@ -18,95 +32,99 @@
         <p>{{orderData?.description}}</p>
       </div>
       <hr class="my-3">
-      <!--Order Details -->
-      <div class="first-details">
-        <div class="row">
-          <div class="col-md-4 d-flex align-items-center justify-content-between p-0 ">
-            <div class="mx-3">
-              <h4>{{'orders.department'| translate}}</h4>
-              <p>{{orderData?.department?.name}}</p>
-            </div>
-            <div class="vertical-divider "></div>
+    </div>
+
+    <!--Order Details -->
+    <div class="first-details">
+      <div class="row">
+        <div class="col-md-4 d-flex align-items-center justify-content-between p-0 ">
+          <div class="mx-3">
+            <h4>{{'orders.department'| translate}}</h4>
+            <p>{{orderData?.department?.name}}</p>
           </div>
-          <div class="col-md-4 d-flex align-items-center justify-content-between p-0">
-            <div class="mx-4">
-              <h4> {{'orders.workType'| translate}} </h4>
-              <p>{{orderData?.work_type?.name}}</p>
-            </div>
-            <div class="vertical-divider "></div>
-          </div>
-          <div class="col-md-4 justify-content-center">
-            <div class="mx-3">
-              <h4>{{'orders.status'| translate}}</h4>
-              <p>{{orderData?.status?.name}}</p>
-            </div>
-          </div>
-          <!--  -->
-          <div class="col-md-4 d-flex align-items-center justify-content-between p-0 ">
-            <div class="mx-3">
-              <h4>{{'orders.engineer'| translate}}</h4>
-              <p>{{orderData?.engineer?.name}}</p>
-            </div>
-            <div class="vertical-divider "></div>
-          </div>
-          <div class="col-md-4 d-flex align-items-center justify-content-between p-0">
-            <div class="mx-4">
-              <h4> {{'orders.technician'| translate}} </h4>
-              <p>{{orderData?.technician?.name}}</p>
-            </div>
-            <div class="vertical-divider "></div>
-          </div>
-          <div class="col-md-4 justify-content-center">
-            <div class="mx-3">
-              <h4>{{'orders.requestername'| translate}}</h4>
-              <p>{{orderData?.customer_name}}</p>
-            </div>
-          </div>
-          <!--  -->
-          <div class="col-md-4 d-flex align-items-center justify-content-between p-0 ">
-            <div class="mx-3">
-              <h4>{{'orders.building'| translate}}</h4>
-              <p>{{orderData?.building?.name}}</p>
-            </div>
-            <div class="vertical-divider "></div>
-          </div>
-          <div class="col-md-4 d-flex align-items-center justify-content-between p-0">
-            <div class="mx-4">
-              <h4> {{'orders.floor'| translate}} </h4>
-              <p>{{orderData?.floor_no}}</p>
-            </div>
-            <div class="vertical-divider "></div>
-          </div>
-          <div class="col-md-4 justify-content-center">
-            <div class="mx-3">
-              <h4>{{'orders.room'| translate}}</h4>
-              <p>{{orderData?.room_no}}</p>
-            </div>
-          </div>
-          <!--  -->
-          <div class="col-md-4 d-flex align-items-center justify-content-between p-0 ">
-            <div class="mx-3">
-              <h4>{{'orders.added_by'| translate}}</h4>
-              <p>{{orderData?.added_by?.name}}</p>
-            </div>
-            <div class="vertical-divider "></div>
-          </div>
-          <div class="col-md-4 d-flex align-items-center justify-content-between p-0">
-            <div class="mx-4">
-              <h4> {{'orders.equipment'| translate}} </h4>
-              <p>{{orderData?.equipment?.name}}</p>
-            </div>
-            <div class="vertical-divider "></div>
-          </div>
-          <div class="col-md-4 justify-content-center">
-            <div class="mx-3">
-              <h4>{{'orders.source'| translate}}</h4>
-              <p>{{orderData?.source?.name}}</p>
-            </div>
-          </div>
-          <!--  -->
+          <div class="vertical-divider "></div>
         </div>
-        <!-- strat Add material -->
+        <div class="col-md-4 d-flex align-items-center justify-content-between p-0">
+          <div class="mx-4">
+            <h4> {{'orders.workType'| translate}} </h4>
+            <p>{{orderData?.work_type?.name}}</p>
+          </div>
+          <div class="vertical-divider "></div>
+        </div>
+        <div class="col-md-4 justify-content-center">
+          <div class="mx-3">
+            <h4>{{'orders.status'| translate}}</h4>
+            <p>{{orderData?.status?.name}}</p>
+          </div>
+        </div>
+        <!--  -->
+        <div class="col-md-4 d-flex align-items-center justify-content-between p-0 ">
+          <div class="mx-3">
+            <h4>{{'orders.engineer'| translate}}</h4>
+            <p>{{orderData?.engineer?.name}}</p>
+          </div>
+          <div class="vertical-divider "></div>
+        </div>
+        <div class="col-md-4 d-flex align-items-center justify-content-between p-0">
+          <div class="mx-4">
+            <h4> {{'orders.technician'| translate}} </h4>
+            <p>{{orderData?.technician?.name}}</p>
+          </div>
+          <div class="vertical-divider "></div>
+        </div>
+        <div class="col-md-4 justify-content-center">
+          <div class="mx-3">
+            <h4>{{'orders.requestername'| translate}}</h4>
+            <p>{{orderData?.customer_name}}</p>
+          </div>
+        </div>
+        <!--  -->
+        <div class="col-md-4 d-flex align-items-center justify-content-between p-0 ">
+          <div class="mx-3">
+            <h4>{{'orders.building'| translate}}</h4>
+            <p>{{orderData?.building?.name}}</p>
+          </div>
+          <div class="vertical-divider "></div>
+        </div>
+        <div class="col-md-4 d-flex align-items-center justify-content-between p-0">
+          <div class="mx-4">
+            <h4> {{'orders.floor'| translate}} </h4>
+            <p>{{orderData?.floor_no}}</p>
+          </div>
+          <div class="vertical-divider "></div>
+        </div>
+        <div class="col-md-4 justify-content-center">
+          <div class="mx-3">
+            <h4>{{'orders.room'| translate}}</h4>
+            <p>{{orderData?.room_no}}</p>
+          </div>
+        </div>
+        <!--  -->
+        <div class="col-md-4 d-flex align-items-center justify-content-between p-0 ">
+          <div class="mx-3">
+            <h4>{{'orders.added_by'| translate}}</h4>
+            <p>{{orderData?.added_by?.name}}</p>
+          </div>
+          <div class="vertical-divider "></div>
+        </div>
+        <div class="col-md-4 d-flex align-items-center justify-content-between p-0">
+          <div class="mx-4">
+            <h4> {{'orders.equipment'| translate}} </h4>
+            <p>{{orderData?.equipment?.name}}</p>
+          </div>
+          <div class="vertical-divider "></div>
+        </div>
+        <div class="col-md-4 justify-content-center">
+          <div class="mx-3">
+            <h4>{{'orders.source'| translate}}</h4>
+            <p>{{orderData?.source?.name}}</p>
+          </div>
+        </div>
+        <!--  -->
+      </div>
+
+      <!-- strat Add material -->
+      <ng-container *ngIf="materialTableData.length > 0">
         <h4>{{'orders.update.material' | translate}}</h4>
         <table class="custom-table">
           <thead class="text-capitalize">
@@ -122,7 +140,12 @@
             </tr>
           </tbody>
         </table>
-        <!-- Start Spare Parts -->
+      </ng-container>
+
+
+
+      <!-- Start Spare Parts -->
+      <ng-container *ngIf="spareTableData.length > 0">
         <div class="py-4">
           <h4>{{'orders.update.parts' | translate}}</h4>
           <table class="custom-table">
@@ -152,8 +175,11 @@
             </tbody>
           </table>
         </div>
-      </div>
+      </ng-container>
+
 
     </div>
-  </section>
-</div>
+
+
+  </div>
+</section>

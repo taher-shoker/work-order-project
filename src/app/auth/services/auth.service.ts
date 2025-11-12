@@ -1,35 +1,102 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { CookieService } from 'ngx-cookie-service';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
+
+export interface IUser {
+  id: number;
+  name: string;
+  email: string;
+  mobile: string;
+  title: {
+    id: number;
+    name: string;
+  };
+  department: {
+    id: number;
+    name: string;
+  };
+  is_active: number;
+  account_type: number;
+  image: string;
+  token: string;
+  roles: IUserRoles;
+}
+
+export interface IUserRoles {
+  add_users: boolean;
+  edit_users: boolean;
+  delete_users: boolean;
+}
+
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
-  title: any
+  private userSubject = new BehaviorSubject<IUser | null>(null);
+  user$ = this.userSubject.asObservable();
+  title: any;
+  constructor(
+    private _HttpClient: HttpClient,
+    private cookieService: CookieService
+  ) {
+    this.restoreUserFromCookie();
+  }
 
-
-  constructor(private _HttpClient: HttpClient) {
-    if (localStorage.getItem('token') !== null) {
-      // console.log(localStorage.getItem('token'))
-      this.getProfile()
+  /** 🔹 Load user from cookie if exists */
+  private restoreUserFromCookie(): void {
+    try {
+      const userStr = this.cookieService.get('user');
+      if (userStr) {
+        const user: IUser = JSON.parse(userStr);
+        this.userSubject.next(user);
+      }
+    } catch (error) {
+      console.error('Failed to parse user cookie:', error);
     }
   }
 
-
-  getProfile() {
-    localStorage.getItem('title')
-    this.getRole()
+  /** 🔹 Get current user value */
+  get user(): IUser | null {
+    return this.userSubject.value;
   }
 
-  getRole() {
-    if (
-      localStorage.getItem('token') !== null &&
-      localStorage.getItem('title')
-    ) {
-      this.title = localStorage.getItem('title');
-    }
+  /** 🔹 Role Checks */
+  isAdmin(): boolean {
+    return this.user?.title?.id === 1;
   }
-  onLogin(data: any): Observable<any> {
-    return this._HttpClient.post('auth/login', data);
+
+  isEngineer(): boolean {
+    return this.user?.title?.id === 2;
+  }
+
+  isTechnician(): boolean {
+    return this.user?.title?.id === 3;
+  }
+
+  /** 🔹 Check if user is authenticated */
+  isAuthorizedUser(): boolean {
+    return !!this.cookieService.get('token');
+  }
+
+  /** 🔹 Login request */
+  onLogin(credentials: { email: string; password: string }): Observable<IUser> {
+    return this._HttpClient.post<IUser>('auth/login', credentials).pipe(
+      tap((res: any) => {
+        const user = res?.data;
+        if (user) {
+          this.userSubject.next(user);
+          this.cookieService.set('user', JSON.stringify(user));
+          this.cookieService.set('token', user.token);
+        }
+      })
+    );
+  }
+
+  /** 🔹 Logout helper */
+  logout(): void {
+    this.cookieService.delete('user');
+    this.cookieService.delete('token');
+    this.userSubject.next(null);
   }
 }

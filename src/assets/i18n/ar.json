@@ -129,7 +129,9 @@
     },
     "status": "الحالة",
     "tech_report": "التقرير الفني",
-    "holding_reason": "سبب التعليق "
+    "holding_reason": "سبب التعليق ",
+    "holding_title": "أسباب تعليق أمر العمل",
+    "required_items": "المواد المطلوبة"
   },
   "department": {
     "department": "إدارة الأقسام",
@@ -265,5 +267,22 @@
     "enter_device_type": "اكتب نوع الجهاز",
     "enter_model": "اكتب الموديل/الطراز",
     "enter_manufacturer": "اكتب الشركة المصنعة"
+  },
+  "status": {
+    "new": "جديد",
+    "assigned": "مسند",
+    "in_progress": "قيد التنفيذ",
+    "on_hold": "معلق",
+    "completed": "مكتمل",
+    "closed": "مغلق",
+    "rejected": "مرفوض",
+    "cancelled": "ملغي",
+    "close_confirmed": "تأكيد الغلق"
+  },
+  "confirmation": {
+    "title": "تأكيد إغلاق أمر العمل",
+    "des": "هل تؤكد إغلاق أمر العمل وحفظ جميع تفاصيل التنفيذ؟",
+    "cancel": "إلغاء",
+    "confirm": "تأكيد"
   }
 }

@@ -16,6 +16,10 @@ import { MaterialModule } from './material/material/material.module';
 import { SecNavComponent } from './sec-nav/sec-nav.component';
 import { LogoutComponent } from './sec-nav/logout/logout.component';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
+import { VerifyCodeComponent } from '../admin/work-orders/components/view/verify-code/verify-code.component';
+import { NgOtpInputModule, NgOtpInputComponent } from 'ng-otp-input';
+import { HoldReasonComponent } from '../admin/work-orders/components/view/hold-reason/hold-reason.component';
+import { NotificationsComponent } from './sec-nav/notifications/notifications.component';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -29,7 +33,10 @@ export function createTranslateLoader(http: HttpClient) {
     DeleteItemComponent,
     NotificationListComponent,
     SecNavComponent,
-    ConfirmDialogComponent
+    ConfirmDialogComponent,
+    VerifyCodeComponent,
+    HoldReasonComponent,
+    NotificationsComponent,
   ],
   imports: [
     CommonModule,
@@ -38,10 +45,10 @@ export function createTranslateLoader(http: HttpClient) {
     ToastrModule,
     ReactiveFormsModule,
     FormsModule,
-    TranslateModule
-
+    TranslateModule,
+    NgOtpInputComponent,
   ],
-  exports:[
+  exports: [
     CommonModule,
     SharedRoutingModule,
     MaterialModule,
@@ -52,8 +59,7 @@ export function createTranslateLoader(http: HttpClient) {
     SidebarComponent,
     SecNavComponent,
     TranslateModule,
-    NotificationListComponent
-
-  ]
+    NotificationListComponent,
+  ],
 })
-export class SharedModule { }
+export class SharedModule {}

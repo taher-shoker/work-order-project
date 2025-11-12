@@ -1,0 +1,53 @@
+<section class="close-popup">
+  <h2>{{'orders.holding_title' |translate}}</h2>
+  <div class="
+">
+    <form [formGroup]="orderForm" (ngSubmit)="onSubmit()">
+      <div class="row all-orders">
+        <!-- Hold reason -->
+        <div class="col-md-8">
+          <mat-form-field appearance="fill" class="w-100">
+            <mat-label>{{ 'orders.holding_reason' | translate }}</mat-label>
+            <input formControlName="holding_reason" matInput placeholder="{{ 'orders.holding_reason' | translate }}" />
+            <mat-error *ngIf="orderForm.get('holding_reason')?.hasError('required')">
+              {{ 'orders.holding_reason' | translate }} {{ 'required' | translate }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- Used items description -->
+
+        <div class="col-md-12">
+          <mat-form-field class="example-full-width w-100">
+            <mat-label>{{ 'orders.required_items' | translate }}</mat-label>
+            <textarea formControlName="used_items_descriptions" matInput
+              placeholder="{{ 'orders.required_items' | translate }}">
+                    </textarea>
+          </mat-form-field>
+        </div>
+
+        <!-- Description -->
+        <div class="col-md-12">
+          <mat-form-field class="example-full-width w-100">
+            <mat-label>{{ 'orders.tech_report' | translate }}</mat-label>
+            <textarea formControlName="technician_report" matInput placeholder="{{ 'orders.tech_report' | translate }}">
+          </textarea>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-center gap-3 mt-4">
+        <button mat-raised-button color="primary" type="submit" [disabled]="orderForm.invalid" class="w-25">
+          {{ 'confirmation.confirm' | translate }}
+        </button>
+
+        <button mat-stroked-button color="warn" type="button" (click)="onCancel()" class="w-25">
+          {{ 'confirmation.cancel' | translate }}
+        </button>
+      </div>
+    </form>
+
+
+  </div>
+
+</section>
