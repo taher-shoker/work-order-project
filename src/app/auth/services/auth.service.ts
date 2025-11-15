@@ -7,14 +7,12 @@ import { Observable } from 'rxjs';
 export class AuthService {
   title: any
 
-
   constructor(private _HttpClient: HttpClient) {
     if (localStorage.getItem('token') !== null) {
       // console.log(localStorage.getItem('token'))
       this.getProfile()
     }
   }
-
 
   getProfile() {
     localStorage.getItem('title')
@@ -29,7 +27,11 @@ export class AuthService {
       this.title = localStorage.getItem('title');
     }
   }
+
   onLogin(data: any): Observable<any> {
     return this._HttpClient.post('auth/login', data);
+  }
+  onRegister(data: any): Observable<any> {
+    return this._HttpClient.post('auth/register', data);
   }
 }

@@ -76,6 +76,8 @@
     "search": "Search",
     "addnew": "Add new",
     "required": "required",
+    "passwordValidation": "A password must contain at least eight characters, including at least one number, both lower and uppercase letters, and special characters",
+    "confirmPasswordValidation": "Password And Confirm Password Not Match",
     "login": {
         "login": "Login",
         "noaccount": "Have not Account",
@@ -86,6 +88,24 @@
         "welcome": "Welcome To Work Orders System",
         "welcomeback": "Welcome back !",
         "signin": "Sign In to Manage your Orders \n Easily"
+    },
+    "register": {
+        "register": "Register",
+        "welcome": "One step to a complete management experience",
+        "account": "Already have an account?",
+        "userName": "Full Name",
+        "enterUserName": "Enter your full name",
+        "name": "Name",
+        "enterName": "Enter your name",
+        "email": "Email",
+        "enterEmail": "Enter your email",
+        "phone": "Phone Number",
+        "enterPhone": "Enter your phone number",
+        "password": "Password",
+        "enterPassword": "Enter your password",
+        "confirmPassword": "Confirm Password",
+        "enterConfirmPassword": "Confirm your password",
+        "create": "Create Account"
     },
     "orders": {
         "orders": "Work Orders",

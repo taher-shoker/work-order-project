@@ -16,6 +16,7 @@ import { MaterialModule } from './material/material/material.module';
 import { SecNavComponent } from './sec-nav/sec-nav.component';
 import { LogoutComponent } from './sec-nav/logout/logout.component';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
+import { NgxIntlTelInputModule } from 'ngx-intl-tel-input';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -38,10 +39,10 @@ export function createTranslateLoader(http: HttpClient) {
     ToastrModule,
     ReactiveFormsModule,
     FormsModule,
-    TranslateModule
-
+    TranslateModule,
+    NgxIntlTelInputModule
   ],
-  exports:[
+  exports: [
     CommonModule,
     SharedRoutingModule,
     MaterialModule,
@@ -52,8 +53,8 @@ export function createTranslateLoader(http: HttpClient) {
     SidebarComponent,
     SecNavComponent,
     TranslateModule,
-    NotificationListComponent
-
+    NotificationListComponent,
+    NgxIntlTelInputModule
   ]
 })
 export class SharedModule { }
