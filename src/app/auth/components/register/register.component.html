@@ -1,1 +1,149 @@
-<p>register works!</p>
+<section>
+    <div class="container-fluid h-100 ">
+        <div class="row h-100">
+            <div class="col-md-7">
+                <div class="container">
+                    <div class="d-flex justify-content-center">
+                        <img class=" logo " src="../../../../assets/images/logo.png" alt="" />
+                    </div>
+                    <div class="content">
+                        <h2>{{'home.hello' | translate}}</h2>
+                        <p>{{'register.welcome' | translate}}</p>
+                        <h6>{{'register.account' | translate}}
+                            <a routerLink="/auth/login">{{'login.login' | translate}}</a>
+                        </h6>
+
+                        <form [formGroup]="registerForm" (ngSubmit)="onSubmit(registerForm)">
+                            <div class="row">
+                                <!-- User Name -->
+                                <div class="col-md-12">
+                                    <label for="">{{'register.userName' | translate}}</label>
+                                    <input type="text" class="form-control"
+                                        placeholder="{{'register.enterUserName' | translate}}"
+                                        formControlName="user_name">
+                                    <div class="error-container mb-2">
+                                        <div
+                                            *ngIf="registerForm.controls.user_name.errors && registerForm.controls.user_name.touched">
+                                            <mat-error *ngIf="registerForm.controls.user_name.hasError('required')">
+                                                {{'register.userName' | translate}} {{'required' | translate}}
+                                            </mat-error>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Email -->
+                                <div class="col-md-12">
+                                    <label for="">{{'register.email' | translate}}</label>
+                                    <input type="text" class="form-control"
+                                        placeholder="{{'register.enterEmail' | translate}}" formControlName="email">
+                                    <div class="error-container mb-2">
+                                        <div
+                                            *ngIf="registerForm.controls.email.errors && registerForm.controls.email.touched">
+                                            <mat-error *ngIf="registerForm.controls.email.hasError('required')">
+                                                {{'register.email' | translate}} {{'required' | translate}}
+
+                                            </mat-error>
+                                            <mat-error *ngIf="registerForm.controls.email.hasError('pattern')">
+                                                ex: abc@domain.com
+                                            </mat-error>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Phone -->
+                                <!-- <div class="col-md-12"> -->
+                                    <label for="">{{'register.phone' | translate}}</label>
+                                    <ngx-intl-tel-input  [preferredCountries]="preferredCountries"
+                                        [enableAutoCountrySelect]="true" [separateDialCode]="true"
+                                        formControlName="mobile">
+                                    </ngx-intl-tel-input>
+                                    <!-- <label for="">{{'register.phone' | translate}}</label>
+                                    <input type="text" class="form-control"
+                                        placeholder="{{'register.enterPhone' | translate}}" formControlName="mobile"> -->
+                                    <div class="error-container mb-2">
+                                        <div
+                                            *ngIf="registerForm.controls.mobile.errors && registerForm.controls.mobile.touched">
+                                            <mat-error *ngIf="registerForm.controls.mobile.hasError('required')">
+                                                {{'register.phone' | translate}} {{'required' | translate}}
+
+                                            </mat-error>
+                                            <mat-error *ngIf="registerForm.controls.mobile.hasError('pattern')">
+                                                ex: abc@domain.com
+                                            </mat-error>
+                                        </div>
+                                    </div>
+                                <!-- </div> -->
+                                <!-- Password -->
+                                <div class="col-md-12 position-relative">
+                                    <label for="">{{'register.password' | translate}}</label>
+                                    <input [type]="hide ? 'password' : 'text'" class="form-control "
+                                        placeholder="{{'register.enterPassword' | translate}}"
+                                        formControlName="password">
+                                    <div class="eye-icon">
+                                        <button type="button" mat-icon-button matSuffix (click)="hide = !hide"
+                                            [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                                            <mat-icon>{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>
+                                        </button>
+                                    </div>
+                                    <div class="error-container mb-3">
+                                        <div
+                                            *ngIf="registerForm.controls.password.errors && registerForm.controls.password.touched">
+                                            <mat-error *ngIf="registerForm.controls.password.hasError('required')">
+                                                {{'register.password' | translate}} {{'required' | translate}}
+                                            </mat-error>
+                                            <mat-error *ngIf="registerForm.controls.password.hasError('pattern')">
+                                                {{'passwordValidation' | translate}}
+                                            </mat-error>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- password_confirmation -->
+                                <div class="col-md-12 position-relative">
+                                    <label for="">{{'register.confirmPassword' | translate}}</label>
+                                    <input [type]="hideConfirm ? 'password' : 'text'" class="form-control "
+                                        placeholder="{{'register.enterConfirmPassword' | translate}}"
+                                        formControlName="password_confirmation">
+                                    <div class="eye-icon">
+                                        <button type="button" mat-icon-button matSuffix
+                                            (click)="hideConfirm = !hideConfirm" [attr.aria-label]="'Hide password'"
+                                            [attr.aria-pressed]="hideConfirm">
+                                            <mat-icon>{{ hideConfirm ? 'visibility_off' : 'visibility' }}</mat-icon>
+                                        </button>
+
+                                    </div>
+                                    <div class="error-container mb-3">
+                                        <div
+                                            *ngIf="registerForm.controls.password_confirmation.errors && registerForm.controls.password_confirmation.touched">
+                                            <mat-error
+                                                *ngIf="registerForm.controls.password_confirmation.hasError('required')">
+                                                {{'register.confirmPassword' | translate}} {{'required' | translate}}
+                                            </mat-error>
+                                            <mat-error
+                                                *ngIf="registerForm.controls.password_confirmation.hasError('invalid')">
+                                                {{'confirmPasswordValidation' | translate}}
+                                            </mat-error>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- register -->
+                                <div class="col-md-12 mx-auto">
+                                    <button class="w-100  primary" [disabled]="registerForm.invalid">{{'register.create'
+                                        | translate}}
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-md-5 image d-flex justify-content-center align-items-end">
+                <div class="container">
+                    <div class="image-content ">
+                        <h6>{{'login.welcomeback' | translate}}</h6>
+                        <span>{{'login.signin' | translate}}</span>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
