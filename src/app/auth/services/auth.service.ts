@@ -36,6 +36,7 @@ export class AuthService {
   private userSubject = new BehaviorSubject<IUser | null>(null);
   user$ = this.userSubject.asObservable();
   title: any;
+
   constructor(
     private _HttpClient: HttpClient,
     private cookieService: CookieService
@@ -56,9 +57,37 @@ export class AuthService {
     }
   }
 
-  /** 🔹 Get current user value */
+  /** 🔹 Get current user */
   get user(): IUser | null {
     return this.userSubject.value;
+  }
+
+  /** 🔹 Login */
+  onLogin(data: any): Observable<any> {
+    return this._HttpClient.post('auth/login', data).pipe(
+      tap((res: any) => {
+        if (res?.data?.token) {
+          // Save token
+          this.cookieService.set('token', res.data.token, 7);
+
+          // Save user
+          this.cookieService.set('user', JSON.stringify(res.data.user), 7);
+
+          // Update observable user
+          this.userSubject.next(res.data.user);
+        }
+      })
+    );
+  }
+
+  /** 🔹 Logout */
+  logout(): void {
+    this.cookieService.delete('token');
+    this.cookieService.delete('user');
+    this.userSubject.next(null);
+  }
+  onRegister(data: any): Observable<any> {
+    return this._HttpClient.post('auth/register', data);
   }
 
   /** 🔹 Role Checks */
@@ -79,24 +108,8 @@ export class AuthService {
     return !!this.cookieService.get('token');
   }
 
-  /** 🔹 Login request */
-  onLogin(credentials: { email: string; password: string }): Observable<IUser> {
-    return this._HttpClient.post<IUser>('auth/login', credentials).pipe(
-      tap((res: any) => {
-        const user = res?.data;
-        if (user) {
-          this.userSubject.next(user);
-          this.cookieService.set('user', JSON.stringify(user));
-          this.cookieService.set('token', user.token);
-        }
-      })
-    );
-  }
-
-  /** 🔹 Logout helper */
-  logout(): void {
-    this.cookieService.delete('user');
-    this.cookieService.delete('token');
-    this.userSubject.next(null);
-  }
+  // getProfile() {
+  //   localStorage.getItem('title');
+  //   this.getRole();
+  // }
 }

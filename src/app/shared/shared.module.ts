@@ -20,6 +20,7 @@ import { VerifyCodeComponent } from '../admin/work-orders/components/view/verify
 import { NgOtpInputModule, NgOtpInputComponent } from 'ng-otp-input';
 import { HoldReasonComponent } from '../admin/work-orders/components/view/hold-reason/hold-reason.component';
 import { NotificationsComponent } from './sec-nav/notifications/notifications.component';
+import { NgxIntlTelInputModule } from 'ngx-intl-tel-input';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -47,6 +48,7 @@ export function createTranslateLoader(http: HttpClient) {
     FormsModule,
     TranslateModule,
     NgOtpInputComponent,
+    NgxIntlTelInputModule,
   ],
   exports: [
     CommonModule,
@@ -60,6 +62,7 @@ export function createTranslateLoader(http: HttpClient) {
     SecNavComponent,
     TranslateModule,
     NotificationListComponent,
+    NgxIntlTelInputModule,
   ],
 })
 export class SharedModule {}

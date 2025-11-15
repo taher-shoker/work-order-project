@@ -7,7 +7,6 @@ import { RegisterComponent } from './components/register/register.component';
 import { EditProfileComponent } from './components/edit-profile/edit-profile.component';
 import { SharedModule } from '../shared/shared.module';
 
-
 @NgModule({
   declarations: [
     LoginComponent,
