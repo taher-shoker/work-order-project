@@ -7,8 +7,8 @@ import { Observable } from 'rxjs';
 })
 export class WorkOrdersService {
   constructor(private _HttpClient: HttpClient) {}
-  getAllOrders(params: any): Observable<any> {
-    return this._HttpClient.get('work-orders', { params: params });
+  getAllOrders(): Observable<any> {
+    return this._HttpClient.get('work-orders');
   }
   getOrder(id: number): Observable<any> {
     return this._HttpClient.get(`work-orders/show/${id}`);

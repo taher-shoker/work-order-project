@@ -14,17 +14,21 @@
 
   <div class="notifications-list" *ngIf="!isLoading && notifications.length > 0">
     <div class="notification-card" *ngFor="let notif of notifications" [class.urgent]="notif.urgent">
-      <div class="time">{{ notif.timeAgo }}</div>
-      <div class="content">
-        <div class="info">
-          <div class="title">{{ notif.title }}</div>
-          <div class="message">{{ notif.message }}</div>
-          <a href="#" (click)="viewDetails(notif)">عرض التفاصيل &lt;&lt;</a>
+      <a [routerLink]="['/dashboard/work-orders/view', notif.work_order_id]" class="card-link">
+        <!-- Adjust path as needed -->
+        <div class="content">
+          <div class="icon">
+            <img src="assets/images/notification-icon.png" alt="icon" />
+          </div>
+          <div class="info">
+            <div class="title">{{ notif.title }}</div>
+            <div class="message">{{ notif.body }}</div>
+          </div>
         </div>
-        <div class="icon">
-          <img [src]="notif.icon" alt="icon" />
-        </div>
-      </div>
+        <div class="time">{{ notif.created_at | timeAgo }}</div>
+      </a>
     </div>
+
   </div>
+
 </div>

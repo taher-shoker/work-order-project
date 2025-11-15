@@ -1,6 +1,9 @@
 {
   "spinner": "Work Orders Sys",
   "controlPanel": "Control Panel",
+  "admin": "Admin",
+  "engineer": "Engineer",
+  "technicianer": "Technical",
   "home": {
     "hello": "Hello ",
     "pannerWelcome": "You can add Departments and assign Work Orders Here!",
@@ -400,11 +403,11 @@
     "assigned": "Assigned",
     "in_progress": "In Progress",
     "on_hold": "On Hold",
-    "completed": "Completed",
-    "closed": "Closed",
-    "rejected": "Rejected",
-    "cancelled": "Cancelled",
-    "close_confirmed": "Close Confirmed"
+    "completed": "Complete",
+    "closed": "Close",
+    "rejected": "Reject",
+    "cancelled": "Cancel",
+    "close_confirmed": "Close Confirme"
   },
   "confirmation": {
     "title": "Confirmation for close work order",

@@ -4,8 +4,8 @@
       <div class="col-md-4 offset-md-8">
         <div class="order-actions">
           <ng-container *ngFor="let btnId of btnsToShow">
-            <button class="btn " (click)="onAction(btnId)">
-              {{ getLabel(btnId) | translate }}- {{btnId}}
+            <button class=" btn " (click)="onAction(btnId)">
+              {{ getLabel(btnId) | translate }}
             </button>
           </ng-container>
 
@@ -54,7 +54,7 @@
         <div class="col-md-4 justify-content-center">
           <div class="mx-3">
             <h4>{{'orders.status'| translate}}</h4>
-            <p>{{orderData?.status?.name}}</p>
+            <p [ngClass]="'status-label status-' + orderData?.status?.id ">{{orderData?.status?.name}}</p>
           </div>
         </div>
         <!--  -->

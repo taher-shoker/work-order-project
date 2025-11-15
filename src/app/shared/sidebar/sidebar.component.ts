@@ -22,27 +22,7 @@ export class SidebarComponent {
 
   name: string = '';
   email: string = '';
-  role: string | null = '';
-  ngOnInit() {
-    this.role = this._AuthService.title || localStorage.getItem('role');
-
-    this._AuthService.user$.subscribe((user) => {
-      if (user) {
-        this.name = user?.name;
-        this.email = user?.email;
-        this.role = user.title.name;
-      }
-    });
-    // console.log(this._AuthService.title);
-    // توجيه المستخدم بناءً على الدور
-    // if (this._AuthService.isAdmin()) {
-    //   this._Router.navigate(['/dashboard/home']);
-    // } else if (this._AuthService.isEngineer()) {
-    //   this._Router.navigate(['/dashboard/home']);
-    // } else {
-    //   this._Router.navigate(['/dashboard/home']);
-    // }
-  }
+  roleId!: number;
 
   constructor(
     public translate: TranslateService,
@@ -50,6 +30,28 @@ export class SidebarComponent {
     private _Router: Router,
     public _AuthService: AuthService
   ) {}
+  ngOnInit() {
+    this.roleId = this._AuthService.title || localStorage.getItem('role');
+
+    this._AuthService.user$.subscribe((user) => {
+      if (user) {
+        this.name = user?.name;
+        this.email = user?.email;
+        this.roleId = user.title.id;
+      }
+    });
+  }
+
+  getLabel(statusId: number): string {
+    const statusLabels: Record<number, string> = {
+      1: 'admin',
+      2: 'engineer',
+      3: 'technicianer',
+    };
+
+    return statusLabels[statusId] || 'status.unknown';
+  }
+
   toggleSidebar() {
     this.isOpened = !this.isOpened;
     this.isOpenedflag.emit(this.isOpened);

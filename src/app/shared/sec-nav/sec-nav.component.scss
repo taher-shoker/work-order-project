@@ -1,5 +1,4 @@
 .sec-nav {
-  position: relative;
   background-color: #ffffff;
   height: auto;
   padding: 0.3rem 2rem;
@@ -7,6 +6,8 @@
   display: flex;
   flex-wrap: wrap;
   transition: background-color 0.3s ease;
+  position: relative;
+  z-index: 99;
 }
 .lang-switcher {
   // background-color: #F2F3F4;
@@ -49,4 +50,10 @@
 }
 .notify-box {
   position: absolute;
+  z-index: 9999 !important;
+}
+.container,
+.sec-nav,
+.profile {
+  overflow: visible !important;
 }

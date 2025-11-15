@@ -1,6 +1,9 @@
 {
   "spinner": "نظام إدارة أوامر العمل",
   "controlPanel": "لوحة التحكم",
+  "admin": "أدمن",
+  "engineer": "مهندس",
+  "technicianer": "فني",
   "home": {
     "hello": "مرحباً ",
     "pannerWelcome": "منصة موحدة لإدارة الحسابات، الصلاحيات، والتقارير في\n  مكان واحد",
@@ -284,11 +287,11 @@
     "new": "جديد",
     "assigned": "مسند",
     "in_progress": "قيد التنفيذ",
-    "on_hold": "معلق",
-    "completed": "مكتمل",
-    "closed": "مغلق",
-    "rejected": "مرفوض",
-    "cancelled": "ملغي",
+    "on_hold": "تعليق",
+    "completed": "إكمال",
+    "closed": "إغلاق",
+    "rejected": "رفض",
+    "cancelled": "إلفاء",
     "close_confirmed": "تأكيد الغلق"
   },
   "confirmation": {

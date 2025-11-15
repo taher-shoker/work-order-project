@@ -53,7 +53,7 @@ export class AddComponent implements OnInit {
   orderId: string | null = null;
   deviceId: string | null = null;
   currentOrder: any = null;
-  deviceData: Device | null = null;
+  deviceData: any | null = null;
 
   // Lookup data
   workTypes: LookupItem[] = [];
@@ -66,7 +66,7 @@ export class AddComponent implements OnInit {
   technicians: LookupItem[] = [];
 
   // Devices
-  devices: Device[] = [];
+  devices: any[] = [];
   pageSize = 5;
   page = 1;
 
@@ -87,7 +87,8 @@ export class AddComponent implements OnInit {
   ) {
     this.deviceId = this.route.snapshot.paramMap.get('deviceId');
     this.orderId = this.route.snapshot.paramMap.get('id');
-    this.isUpdatePage = !!this.orderId;
+    this.isUpdatePage = !!this.orderId || !!this.deviceId;
+    console.log(this.deviceId, this.orderId);
   }
 
   // ✅ Reactive form
@@ -123,6 +124,7 @@ export class AddComponent implements OnInit {
     // React to department changes
     this.orderForm.get('department_id')?.valueChanges.subscribe((deptId) => {
       if (deptId) {
+        console.log(deptId);
         this.loadEngineers(deptId);
         this.loadTechnicians(deptId);
       }
@@ -149,7 +151,7 @@ export class AddComponent implements OnInit {
       }
     });
 
-    if (this.isUpdatePage && this.orderId) {
+    if (this.isUpdatePage && this.orderId && this.deviceId) {
       this.updateOrder(formData);
     } else {
       this.addNewOrder(formData);
@@ -162,7 +164,7 @@ export class AddComponent implements OnInit {
       next: (res) => {
         this.toastr.success('Work order added successfully');
         setTimeout(
-          () => this.router.navigate(['/dashboard/admin/work-orders']),
+          () => this.router.navigate(['/dashboard/work-orders']),
           1200
         );
       },
@@ -178,7 +180,7 @@ export class AddComponent implements OnInit {
       next: () => {
         this.toastr.success('Work order updated successfully');
         setTimeout(
-          () => this.router.navigate(['/dashboard/admin/work-orders']),
+          () => this.router.navigate(['/dashboard/work-orders']),
           1200
         );
       },
@@ -212,6 +214,18 @@ export class AddComponent implements OnInit {
       error: (err) => {
         this.toastr.error(err.message, 'Error fetching order details');
       },
+    });
+  }
+  private getDeviceById(id: string): void {
+    this.devicesService.getDevice(+id).subscribe({
+      next: (res) => {
+        this.deviceData = res.data;
+        const o = this.deviceData;
+        this.orderForm.patchValue({
+          department_id: o?.department?.id,
+        });
+      },
+      error: (err) => this.toastr.error(err.message, 'Error loading device'),
     });
   }
 
@@ -271,13 +285,6 @@ export class AddComponent implements OnInit {
     this.devicesService.getAllDevices(params).subscribe({
       next: (res) => (this.devices = res.data),
       error: (err) => this.toastr.error(err.message, 'Error loading devices'),
-    });
-  }
-
-  private getDeviceById(id: string): void {
-    this.devicesService.getDevice(+id).subscribe({
-      next: (res) => (this.deviceData = res.data),
-      error: (err) => this.toastr.error(err.message, 'Error loading device'),
     });
   }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 
 import { ToastrService } from 'ngx-toastr';
 import { TranslateService } from '@ngx-translate/core';
@@ -11,7 +11,10 @@ import { HelperService } from 'src/app/services/helper.service';
 })
 export class NotificationsComponent implements OnInit {
   notifications: any[] = [];
-  isLoading = false;
+  currentPage: number = 1;
+  lastPage: number = 1;
+  isLoading: boolean = false;
+  isFetchingMore: boolean = false;
 
   constructor(
     private _helpService: HelperService,
@@ -20,59 +23,47 @@ export class NotificationsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.fetchNotifications();
+    this.fetchNotifications(1);
   }
 
-  private fetchNotifications(): void {
-    this.isLoading = true;
-    this._helpService.getAllNotifications().subscribe({
+  private fetchNotifications(page: number = 1): void {
+    if (this.isFetchingMore) return;
+
+    this.isFetchingMore = true;
+
+    this._helpService.getAllNotifications(page).subscribe({
       next: (res) => {
-        this.notifications = [
-          {
-            id: 1,
-            title: 'أمر عمل جديد عاجل',
-            message: 'تعطل منظومة الطاولة المحمولة',
-            timeAgo: 'قبل 5 دقائق',
-            icon: 'assets/icons/work-order.svg',
-            urgent: true,
-          },
-          {
-            id: 2,
-            title: 'أمر كهرباء عاجل في وحدة العناية المركزة',
-            message: 'انقطاع التيار في الوحدة',
-            timeAgo: 'قبل 12 دقيقة',
-            icon: 'assets/icons/work-order.svg',
-            urgent: true,
-          },
-          {
-            id: 3,
-            title: 'تحديث حالة أمر عمل',
-            message: 'الأمر #102 انتقل إلى مكتمل',
-            timeAgo: 'قبل 3 ساعات',
-            icon: 'assets/icons/update.svg',
-          },
-          {
-            id: 4,
-            title: 'ضبط جديد للإعدادات',
-            message: 'انقطاع التيار في الوحدة',
-            timeAgo: 'قبل 1 يوم',
-            icon: 'assets/icons/settings.svg',
-          },
-          {
-            id: 5,
-            title: 'طلب موافقة لإغلاق أمر',
-            message: 'الأمر #98 ينتظر الموافقة',
-            timeAgo: 'قبل 2 أيام',
-            icon: 'assets/icons/request.svg',
-          },
-        ];
-        this.notifications = res.data;
-        this.isLoading = false;
+        if (page === 1) {
+          // first load
+          this.notifications = res.data.data;
+        } else {
+          // append new items
+          this.notifications = [...this.notifications, ...res.data.data];
+        }
+
+        this.currentPage = res.data.current_page;
+        this.lastPage = res.data.last_page;
+
+        this.isFetchingMore = false;
       },
       error: () => {
-        this.isLoading = false;
+        this.isFetchingMore = false;
       },
     });
+  }
+  @HostListener('window:scroll', [])
+  onScroll(): void {
+    if (
+      window.innerHeight + window.scrollY >=
+      document.body.offsetHeight - 200
+    ) {
+      this.loadNextPage();
+    }
+  }
+  loadNextPage() {
+    if (this.currentPage < this.lastPage && !this.isFetchingMore) {
+      this.fetchNotifications(this.currentPage + 1);
+    }
   }
 
   viewDetails(notification: Notification): void {

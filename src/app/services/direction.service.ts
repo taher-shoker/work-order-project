@@ -20,6 +20,7 @@ export class DirectionService {
 
     if (isPlatformBrowser(this.platformId)) {
       this.applyDirection(this.isRTL);
+      window.location.reload();
     }
   }
 

@@ -12,16 +12,15 @@ export class ViewDeviceComponent {
   currentLang = localStorage.getItem('lang');
   deviceData: any;
   deviceWork: any;
-  deviceId:any;
+  deviceId: any;
 
   constructor(
     private _devicesService: DevicesService,
     private _ToastrService: ToastrService,
-    private _activatedRoute:ActivatedRoute
+    private _activatedRoute: ActivatedRoute
   ) {
     this.deviceId = _activatedRoute.snapshot.params['deviceId'];
     console.log(this.deviceId);
-    
   }
 
   ngOnInit(): void {
@@ -31,22 +30,21 @@ export class ViewDeviceComponent {
   getDeviceById(id: number) {
     this._devicesService.getDevice(id).subscribe({
       next: (res) => {
-        this._ToastrService.success(res.message, 'Get device Succesfuly');
+        //  this._ToastrService.success(res.message, 'Get device Succesfuly');
         this.deviceData = res.data;
         console.log(this.deviceData);
       },
       error: (err) => {
         this._ToastrService.error(err.message, 'Error in Fetch device');
-      }
+      },
     });
   }
 
   getDeviceWorkOrder(id: number) {
     this._devicesService.getDeviceWorkOrder(id).subscribe({
       next: (res) => {
-        this._ToastrService.success(res.message, 'Get device Succesfuly');
+        //this._ToastrService.success(res.message, 'Get device Succesfuly');
         this.deviceWork = res.data;
-        console.log(this.deviceWork);
       },
       error: (err) => {
         this._ToastrService.error(err.message, 'Error in Fetch device');
@@ -54,6 +52,4 @@ export class ViewDeviceComponent {
       complete: () => {},
     });
   }
-
-
 }

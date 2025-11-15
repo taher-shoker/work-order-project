@@ -10,6 +10,7 @@ import { LookupsService } from 'src/app/services/lookups.service';
 import { DeleteItemComponent } from 'src/app/shared/delete-item/delete-item.component';
 import { ViewComponent } from '../view/view.component';
 import { Router } from '@angular/router';
+import { AuthService } from 'src/app/auth/services/auth.service';
 
 @Component({
   selector: 'app-all',
@@ -41,20 +42,22 @@ export class AllComponent {
     private _ToastrService: ToastrService,
     private spinner: NgxSpinnerService,
     public dialog: MatDialog,
-    public router: Router
+    public router: Router,
+    public _AuthService: AuthService
   ) {}
 
   ngOnInit() {
-    // for get all work orders first
-    Object.entries(this.reportForm.value).forEach(([key, value]) => {
-      if (!value) {
-        this.isEmptyData = true;
-      }
-    });
+    // // for get all work orders first
+    // Object.entries(this.reportForm.value).forEach(([key, value]) => {
+    //   if (!value) {
+    //     this.isEmptyData = true;
+    //   }
+    // });
 
-    if (this.isEmptyData == true) {
-      this.onSubmit(this.reportForm);
-    }
+    // if (this.isEmptyData == true) {
+    //   this.onSubmit(this.reportForm);
+    // }
+    this.getWorkOrders();
     this.getDepartment();
     this.getAllStatus();
     this.getEngineers();
@@ -95,6 +98,14 @@ export class AllComponent {
     });
   }
 
+  getWorkOrders() {
+    this._WorkOrdersService.getAllOrders().subscribe({
+      next: (res) => {
+        this.tableResponse = res;
+        this.tableData = this.tableResponse.data;
+      },
+    });
+  }
   // Status
   getAllStatus() {
     this._ReportsService.getStatus().subscribe((res) => {

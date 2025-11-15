@@ -54,8 +54,8 @@ export class HelperService {
     return this._HttpClient.get(`notifications/${id}`);
   }
 
-  getAllNotifications(): Observable<any> {
-    return this._HttpClient.get(`notifications`, {
+  getAllNotifications(page: number = 1): Observable<any> {
+    return this._HttpClient.get(`notifications?page=${page}`, {
       headers: { 'X-No-Spinner': 'true' },
     });
   }

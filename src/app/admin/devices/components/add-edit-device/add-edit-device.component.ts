@@ -11,7 +11,7 @@ import { MatDialog } from '@angular/material/dialog';
 @Component({
   selector: 'app-add-edit-device',
   templateUrl: './add-edit-device.component.html',
-  styleUrls: ['./add-edit-device.component.scss']
+  styleUrls: ['./add-edit-device.component.scss'],
 })
 export class AddEditDeviceComponent {
   currentLang = localStorage.getItem('lang');
@@ -42,19 +42,19 @@ export class AddEditDeviceComponent {
     private _activateRoute: ActivatedRoute,
     private devicesService: DevicesService,
     private _ToastrService: ToastrService,
-    private _Router: Router, public dialog: MatDialog
+    private _Router: Router,
+    public dialog: MatDialog
   ) {
-    this.deviceId = this._activateRoute.snapshot.paramMap.get('id')
+    this.deviceId = this._activateRoute.snapshot.paramMap.get('id');
     if (this.deviceId) {
       this.isUpdatePage = true;
-
     } else {
       this.isUpdatePage = false;
     }
   }
 
   ngOnInit() {
-    this.getDeviceById(this.deviceId)
+    this.getDeviceById(this.deviceId);
     this.getCustodians();
 
     // this.getDeviceType('models');
@@ -70,23 +70,21 @@ export class AddEditDeviceComponent {
     this.getDeviceStatus();
   }
 
-  deviceForm = new FormGroup(
-    {
-      name_en: new FormControl(null, [Validators.required]),
-      name_ar: new FormControl(null, [Validators.required]),
-      description_en: new FormControl(null, [Validators.required]),
-      description_ar: new FormControl(null, [Validators.required]),
-      department_id: new FormControl(null, [Validators.required]),
-      serial_number: new FormControl(null, [Validators.required]),
-      buy_date: new FormControl(null, [Validators.required]),
-      type_id: new FormControl(null, [Validators.required]),
-      company_id: new FormControl(null, [Validators.required]),
-      warranty_period: new FormControl(null, [Validators.required]),
-      model_code: new FormControl(null, [Validators.required]),
-      model_id: new FormControl(null, [Validators.required]),
-      status: new FormControl(null, [Validators.required]),
-    }
-  );
+  deviceForm = new FormGroup({
+    name_en: new FormControl(null, [Validators.required]),
+    name_ar: new FormControl(null, [Validators.required]),
+    description_en: new FormControl(null, [Validators.required]),
+    description_ar: new FormControl(null, [Validators.required]),
+    department_id: new FormControl(null, [Validators.required]),
+    serial_number: new FormControl(null, [Validators.required]),
+    buy_date: new FormControl(null, [Validators.required]),
+    type_id: new FormControl(null, [Validators.required]),
+    company_id: new FormControl(null, [Validators.required]),
+    warranty_period: new FormControl(null, [Validators.required]),
+    model_code: new FormControl(null, [Validators.required]),
+    model_id: new FormControl(null, [Validators.required]),
+    status: new FormControl(null, [Validators.required]),
+  });
 
   onSubmit(data: FormGroup) {
     if (this.deviceId) {
@@ -99,19 +97,17 @@ export class AddEditDeviceComponent {
 
       this.devicesService.onEditDevice(data.value, this.deviceId).subscribe({
         next: (res) => {
-          console.log(data.value)
+          console.log(data.value);
           this._ToastrService.success('Device Updated Succesfuly');
         },
         error: (err) => {
           this._ToastrService.error(err.message, 'Error in Update Device');
         },
         complete: () => {
-          this._Router.navigate(['/dashboard/admin/devices']);
-        }
-      })
-
+          this._Router.navigate(['/dashboard/devices']);
+        },
+      });
     } else {
-
       // Add new Device
       let myData = new FormData();
       let myMap = new Map(Object.entries(data.value));
@@ -128,48 +124,42 @@ export class AddEditDeviceComponent {
           this.openConfirm();
         },
         error: (err) => {
-          this._ToastrService.error(
-            err.message,
-            'Error in Add  Device'
-          );
+          this._ToastrService.error(err.message, 'Error in Add  Device');
         },
         complete: () => {
-          this._Router.navigate(['/dashboard/admin/devices']);
-        }
-      })
+          this._Router.navigate(['/dashboard/devices']);
+        },
+      });
     }
   }
 
   getDeviceById(id: number) {
-    this.devicesService.getDevice(id).subscribe(
-      (res) => {
-        this.currentDevice = res.data;
-        // console.log(this.currentDevice)
+    this.devicesService.getDevice(id).subscribe((res) => {
+      this.currentDevice = res.data;
+      // console.log(this.currentDevice)
 
-        this.deviceForm.patchValue({
-          name_en: this.currentDevice?.name,
-          name_ar: this.currentDevice?.name,
-          description_en: this.currentDevice?.description,
-          description_ar: this.currentDevice?.description,
-          department_id: this.currentDevice?.department_id,
-          serial_number: this.currentDevice?.serial_number,
-          buy_date: this.currentDevice?.buy_date,
-          type_id: this.currentDevice?.type_id,
-          company_id: this.currentDevice?.company_id,
-          warranty_period: this.currentDevice?.warranty_period,
-          model_code: this.currentDevice?.model_code,
-          model_id: this.currentDevice?.model_id,
-          status: this.currentDevice?.status,
-        })
-
-      }
-    )
+      this.deviceForm.patchValue({
+        name_en: this.currentDevice?.name,
+        name_ar: this.currentDevice?.name,
+        description_en: this.currentDevice?.description,
+        description_ar: this.currentDevice?.description,
+        department_id: this.currentDevice?.department_id,
+        serial_number: this.currentDevice?.serial_number,
+        buy_date: this.currentDevice?.buy_date,
+        type_id: this.currentDevice?.type_id,
+        company_id: this.currentDevice?.company_id,
+        warranty_period: this.currentDevice?.warranty_period,
+        model_code: this.currentDevice?.model_code,
+        model_id: this.currentDevice?.model_id,
+        status: this.currentDevice?.status,
+      });
+    });
   }
 
   // Confirm
   openConfirm() {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      width: '40%'
+      width: '40%',
     });
   }
 
@@ -191,36 +181,34 @@ export class AddEditDeviceComponent {
       next: (res) => {
         this.custodiansList = res.data;
         console.log(this.custodiansList);
-      }
+      },
     });
   }
 
   getDepartment() {
-    this.devicesService.onGetDepartment().subscribe(
-      (res) => {
-        this.departments = res.data;
-      }
-    )
+    this.devicesService.onGetDepartment().subscribe((res) => {
+      this.departments = res.data;
+    });
   }
   getDeviceModel() {
     this.devicesService.onGetDeviceModel().subscribe({
       next: (res) => {
         this.devicesModel = res.data;
-      }
+      },
     });
   }
   getDeviceManufacturers() {
     this.devicesService.onGetDeviceManufacturers().subscribe({
       next: (res) => {
         this.manufacturers = res.data;
-      }
+      },
     });
   }
   getDeviceTypes() {
     this.devicesService.onGetDeviceType().subscribe({
       next: (res) => {
         this.deviceTypes = res.data;
-      }
+      },
     });
   }
 
@@ -228,9 +216,7 @@ export class AddEditDeviceComponent {
     this.devicesService.onGetDeviceStatus().subscribe({
       next: (res) => {
         this.deviceStatus = res.data;
-      }
+      },
     });
   }
-
-
 }

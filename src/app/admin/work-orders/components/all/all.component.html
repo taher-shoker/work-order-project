@@ -105,7 +105,7 @@
       </div>
     </div>
     <h4>{{'orders.orders' | translate}}</h4>
-    <div class="text-start mt-3 ">
+    <div *ngIf="_AuthService.isAdmin()" class="text-end mt-3 ">
       <button routerLink="add" class="primary text-center addbtn mx-4">{{'orders.addOrder'|translate}}</button>
     </div>
     <div class="container">
@@ -184,7 +184,9 @@
             <td>{{ item.floor_no }}</td>
             <td>{{ item.room_no }}</td>
             <td>{{item.customer_name}}</td>
-            <td>{{item?.status?.name}}</td>
+            <td>
+              <div [ngClass]="'status-label status-' + item?.status?.id">{{item?.status?.name}}</div>
+            </td>
 
             <td>{{ item.start_date | date : "dd-MM-yyyy , hh:mm a" }}</td>
 
@@ -197,14 +199,18 @@
                   <mat-icon style="color: #05A0E1;">visibility</mat-icon>
                   <span style="color: #05A0E1;">{{'users.view' | translate}}</span>
                 </button>
-                <button [routerLink]="['edit',item.id]" mat-menu-item>
-                  <mat-icon style="color: #feee00;">edit_square</mat-icon>
-                  <span style="color: #feee00;">{{'edit'|translate}}</span>
-                </button>
-                <button mat-menu-item (click)="deleteDialog(item)">
-                  <mat-icon style="color: #EF4444;">delete</mat-icon>
-                  <span style="color: #EF4444;">{{'delete'|translate}}</span>
-                </button>
+                <ng-container *ngIf="_AuthService.isAdmin()">
+                  <button [routerLink]="['edit',item.id]" mat-menu-item>
+                    <mat-icon style="color: #feee00;">edit_square</mat-icon>
+                    <span style="color: #feee00;">{{'edit'|translate}}</span>
+                  </button>
+                  <button mat-menu-item (click)="deleteDialog(item)">
+                    <mat-icon style="color: #EF4444;">delete</mat-icon>
+                    <span style="color: #EF4444;">{{'delete'|translate}}</span>
+                  </button>
+                </ng-container>
+
+
               </mat-menu>
             </td>
           </tr>
