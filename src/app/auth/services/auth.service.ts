@@ -71,10 +71,10 @@ export class AuthService {
           this.cookieService.set('token', res.data.token, 7);
 
           // Save user
-          this.cookieService.set('user', JSON.stringify(res.data.user), 7);
+          this.cookieService.set('user', JSON.stringify(res.data), 7);
 
           // Update observable user
-          this.userSubject.next(res.data.user);
+          this.userSubject.next(res.data);
         }
       })
     );
