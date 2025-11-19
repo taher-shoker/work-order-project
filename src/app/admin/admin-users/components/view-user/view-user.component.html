@@ -1,10 +1,9 @@
 <div [dir]="currentLang =='en' ? 'ltr' : 'rtl'">
   <section>
-    <div class="container px-3 py-4">
+    <div class="container px-3 pt-4 mb-5">
       <div class="details-header d-flex  justify-content-between ">
         <h4>{{'users.viewUser'| translate}}</h4>
-        <span (click)="onClose()" class=" pointer px-2"><i style="color: #232931"
-            class="fa-solid fa-xmark fa-2x"></i></span>
+        <span (click)="onClose()" class=" pointer px-2"><i style="color: #232931" class="fa-solid fa-xmark"></i></span>
       </div>
       <div class="d-flex  justify-content-between py-3">
         <div class="d-flex align-items-center">
@@ -47,26 +46,15 @@
             </div>
           </div>
           <!--  -->
-          <div class="col-md-4 d-flex align-items-center justify-content-between p-0 ">
+          <div class="col-md-4 d-flex align-items-center justify-content-between p-0">
             <div class="mx-3">
               <h4>{{'users.title'| translate}}</h4>
               <p>{{userData?.title.name}}</p>
             </div>
             <div class="vertical-divider "></div>
           </div>
-
-          <!--  -->
         </div>
       </div>
-      <div class="dialog-bottom-btn">
-        <!-- <button class="primary text-center addbtn mx-2 w-40">{{'addnew'|translate}}</button>
-
-                      <button class="primary text-center addbtn  w-40">{{'addnew'|translate}}</button> -->
-
-      </div>
-
-
-
     </div>
   </section>
 </div>

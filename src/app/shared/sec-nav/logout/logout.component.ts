@@ -13,7 +13,7 @@ export class LogoutComponent {
   constructor(
     public DialogRef: MatDialogRef<LogoutComponent>,
     private _Router: Router,
-    public cookieService: CookieService,
+    // public cookieService: CookieService,
     private _AuthService: AuthService
   ) {}
   onlogOut() {

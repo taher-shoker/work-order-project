@@ -13,8 +13,6 @@ export class RegisterComponent {
   hide: boolean = true;
   hideConfirm: boolean = true;
   hideRequiredMarker: boolean = true;
-  // data: any;
-  // ress: any;
   redirectUrl: any;
   preferredCountries: string[] = ['sa', 'eg'];
 
