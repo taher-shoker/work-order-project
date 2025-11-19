@@ -42,6 +42,8 @@
     "unBlock": "إلغاء الحظر",
     "active": "فعال",
     "notActive": "غير فعال",
+    "delete": "حذف",
+    "edit": "تعديل",
     "engineer": "المهندسين",
     "technician": "الفنيين",
     "block_unblock": "حظر | إلغاء الحظر",

@@ -3,15 +3,9 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { DevicesService } from 'src/app/admin/devices/services/devices.service';
 import { UsersService } from 'src/app/admin/services/users.service';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { ConfirmDialogComponent } from 'src/app/shared/confirm-dialog/confirm-dialog.component';
-
-interface Account_type {
-  value: number;
-  viewValue: string;
-}
 
 @Component({
   selector: 'app-add-edit-user',
@@ -19,20 +13,11 @@ interface Account_type {
   styleUrls: ['./add-edit-user.component.scss']
 })
 export class AddEditUserComponent {
-
-  // currentLang = localStorage.getItem('lang');
-  // types: Account_type[] = [
-  //   { value: 0, viewValue: 'System Admin' },
-  //   { value: 1, viewValue: 'Engineer' },
-  //   { value: 2, viewValue: 'Technician' },
-  // ];
-  // departmentId: any;
-  // preferredCountries: string[] = ['sa', 'eg'];
   userId: any;
   titles: any;
   currentUser: any;
-  department: any;
-  userType: any;
+  departments: any;
+  departmentId: any;
   hide: boolean = true;
   hideConfirm: boolean = true;
   hideRequiredMarker: boolean = true;
@@ -56,9 +41,11 @@ export class AddEditUserComponent {
   }
 
   ngOnInit() {
-    this.getCurrentUserById(this.userId);
     this.getTitles();
-    this.getDepartments();
+    if (this.userId) {
+      this.getCurrentUserById(this.userId);
+      this.getDepartments();
+    }
   }
   userForm = new FormGroup(
     {
@@ -66,18 +53,11 @@ export class AddEditUserComponent {
       title_id: new FormControl(null, [Validators.required,]),
       user_name: new FormControl(null, [Validators.required, Validators.pattern(/^[a-zA-z]{3,10}[0-9]{1,5}$/)]),
       email: new FormControl(null, [Validators.required, Validators.pattern(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/)]),
-      mobile: new FormControl(null, [
-        Validators.required,
-        Validators.minLength(11),
-        Validators.maxLength(13),
-      ]),
-      account_type: new FormControl(null),
-      // department_id: new FormControl(null, [Validators.required,]),
+      mobile: new FormControl(null, [Validators.required, Validators.minLength(11), Validators.maxLength(13)]),
+      // account_type: new FormControl(null),
+      // department_id: new FormControl(null),
       // profileImage: new FormControl(null),
-      password: new FormControl(null, [
-        Validators.required,
-        Validators.minLength(3),
-      ]),
+      password: new FormControl(null, [Validators.required, Validators.minLength(3)]),
       password_confirmation: new FormControl(null, [Validators.required])
     },
     {
@@ -97,8 +77,6 @@ export class AddEditUserComponent {
       return { invalid: 'Password And Confirm Password Not Match' };
     }
   }
-
-
 
   onSubmit(data: FormGroup) {
     if (this.userId) {
@@ -149,22 +127,22 @@ export class AddEditUserComponent {
     this._UsersService.getUser(id).subscribe(
       (res) => {
         this.currentUser = res.data
-        this.userType = this.currentUser.account_type
-        this.titles = this.currentUser.title
-        this.department = this.currentUser.department
-        
+        // this.userType = this.currentUser.account_type
+        // this.titles = this.currentUser.title
+        this.departmentId = this.currentUser.department.id
+
         console.log(this.currentUser);
 
         this.userForm.patchValue({
           name: this.currentUser?.name,
-          title_id: this.titles?.id,
+          title_id: this.currentUser?.title?.id,
           email: this.currentUser?.email,
-          account_type: this.userType,
+          // account_type: this.currentUser.account_type,
           user_name: this.currentUser?.user_name,
           mobile: this.currentUser?.mobile,
           password: this.currentUser?.password,
           password_confirmation: this.currentUser?.password_confirmation,
-          // department_id: this.department?.id,
+          // department_id: this.currentUser.department?.id,
         })
 
       })
@@ -174,15 +152,15 @@ export class AddEditUserComponent {
     this._UsersService.onGetAccountType().subscribe(
       (res) => {
         this.titles = res.data;
-        console.log(this.titles);
+        // console.log(this.titles);
       }
     )
   }
   getDepartments() {
     this._UsersService.onGetDepartment().subscribe(
       (res) => {
-        this.department = res.data;
-        console.log(this.department);
+        this.departments = res.data;
+        console.log(this.departments);
       }
     )
   }
