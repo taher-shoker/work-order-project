@@ -131,7 +131,11 @@
     "status": "Status",
     "tech_report": "Technical Report",
     "holding_reason": "Holding Reason",
-    "required_items": "Required Items"
+    "required_items": "Required Items",
+    "add_attachment": "Add Attachments",
+    "attachment": " Attachments",
+    "rejection_reason": " Rejection Reason",
+    "rejection_title": "The resason for holding work order"
   },
   "department": {
     "department": "Department Management",

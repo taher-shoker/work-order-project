@@ -22,6 +22,8 @@ import { HoldReasonComponent } from '../admin/work-orders/components/view/hold-r
 import { NotificationsComponent } from './sec-nav/notifications/notifications.component';
 import { TimeAgoPipe } from '../services/time-ago.pipe';
 import { NgxIntlTelInputModule } from 'ngx-intl-tel-input';
+import { FileUploaderComponent } from './file-uploader/file-uploader.component';
+import { RejectReasonComponent } from '../admin/work-orders/components/view/reject-reason/reject-reason.component';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -40,6 +42,8 @@ export function createTranslateLoader(http: HttpClient) {
     HoldReasonComponent,
     NotificationsComponent,
     TimeAgoPipe,
+    FileUploaderComponent,
+    RejectReasonComponent,
   ],
   imports: [
     CommonModule,
@@ -66,6 +70,7 @@ export function createTranslateLoader(http: HttpClient) {
     NotificationListComponent,
     TimeAgoPipe,
     NgxIntlTelInputModule,
+    FileUploaderComponent,
   ],
 })
 export class SharedModule {}

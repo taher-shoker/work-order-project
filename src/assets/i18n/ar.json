@@ -154,7 +154,11 @@
     "tech_report": "التقرير الفني",
     "holding_reason": "سبب التعليق ",
     "holding_title": "أسباب تعليق أمر العمل",
-    "required_items": "المواد المطلوبة"
+    "required_items": "المواد المطلوبة",
+    "add_attachment": "إضافة ملفات",
+    "attachment": " ملفات",
+    "rejection_reason": "سبب الرفض",
+    "rejection_title": "أسباب رفض امر العمل"
   },
   "department": {
     "department": "إدارة الأقسام",
