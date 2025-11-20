@@ -9,6 +9,8 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 })
 export class HoldReasonComponent implements OnInit {
   orderForm: FormGroup;
+  uploadedFiles: any[] = [];
+  isLoading = false;
 
   constructor(
     private fb: FormBuilder,
@@ -19,10 +21,24 @@ export class HoldReasonComponent implements OnInit {
       holding_reason: ['', Validators.required],
       used_items_descriptions: ['', Validators.required],
       technician_report: [''],
+      pendding_attachment: [null], // FIXED
     });
   }
+
   ngOnInit(): void {
-    // ✅ send data to parent
+    // If parent sends data → fill the form
+    if (this.data) {
+      this.orderForm.patchValue({
+        holding_reason: this.data.holding_reason || '',
+        used_items_descriptions: this.data.used_items_descriptions || '',
+        technician_report: this.data.technician_report || '',
+        pendding_attachment: this.data.pendding_attachment || null,
+      });
+
+      if (this.data.pendding_attachment) {
+        this.uploadedFiles = this.data.pendding_attachment;
+      }
+    }
   }
 
   onSubmit(): void {
@@ -34,6 +50,17 @@ export class HoldReasonComponent implements OnInit {
   }
 
   onCancel(): void {
-    this.dialogRef.close(null); // cancel with no data
+    this.dialogRef.close(null);
+  }
+
+  onUploadFile(files: any) {
+    this.uploadedFiles = files;
+    this.orderForm.get('pendding_attachment')?.setValue(this.uploadedFiles);
+  }
+
+  onDeleteFile(id: any) {
+    console.log(id);
+    this.uploadedFiles = this.uploadedFiles.filter((x: any) => x.id !== id);
+    this.orderForm.get('pendding_attachment')?.setValue(this.uploadedFiles);
   }
 }

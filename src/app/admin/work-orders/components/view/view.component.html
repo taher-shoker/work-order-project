@@ -120,6 +120,63 @@
             <p>{{orderData?.source?.name}}</p>
           </div>
         </div>
+        <div class="row" *ngIf="orderData?.status.id === 4">
+          <div class="col-md-12">
+            <h3>{{'orders.holding_title' |translate}} </h3>
+          </div>
+          <div class="row">
+            <div class="col-md-3 d-flex align-items-center justify-content-between p-0">
+              <div class="mx-4">
+                <h4> {{'orders.holding_reason'| translate}} </h4>
+                <p>{{orderData?.holding_reason}}</p>
+              </div>
+              <div class="vertical-divider "></div>
+            </div>
+            <div class="col-md-3 d-flex align-items-center justify-content-between p-0">
+              <div class="mx-4">
+                <h4> {{'orders.required_items'| translate}} </h4>
+                <p>{{orderData?.used_items_descriptions}}</p>
+              </div>
+              <div class="vertical-divider "></div>
+            </div>
+            <div class="col-md-3 d-flex align-items-center justify-content-between p-0">
+              <div class="mx-4">
+                <h4> {{'orders.tech_report'| translate}} </h4>
+                <p>{{orderData?.technician_report}}</p>
+              </div>
+              <div class="vertical-divider "></div>
+            </div>
+            <div class="col-md-3 d-flex align-items-center justify-content-between p-0">
+              <div class="mx-4" *ngIf="orderData?.pendding_attachment">
+                <h4> {{'orders.attachment'| translate}} </h4>
+                <img width="120px" height="120px" [src]="orderData?.pendding_attachment" alt="">
+              </div>
+              <div class="vertical-divider "></div>
+            </div>
+          </div>
+        </div>
+        <div class="row" *ngIf="orderData?.status.id === 7">
+          <div class="col-md-12">
+            <h3>{{'orders.rejection_title' |translate}} </h3>
+          </div>
+          <div class="row">
+
+            <div class="col-md-3 d-flex align-items-center justify-content-between p-0">
+              <div class="mx-4">
+                <h4> {{'orders.rejection_reason'| translate}} </h4>
+                <p>{{orderData?.rejection_reason}}</p>
+              </div>
+              <div class="vertical-divider "></div>
+            </div>
+            <div class="col-md-3 d-flex align-items-center justify-content-between p-0">
+              <div class="mx-4" *ngIf="orderData?.rejection_attachment">
+                <h4> {{'orders.attachment'| translate}} </h4>
+                <img width="120px" height="120px" [src]="orderData?.rejection_attachment" alt="">
+              </div>
+              <div class="vertical-divider "></div>
+            </div>
+          </div>
+        </div>
         <!--  -->
       </div>
 

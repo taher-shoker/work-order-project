@@ -1,0 +1,39 @@
+<section class="close-popup">
+  <h2>{{ 'orders.holding_title' | translate }}</h2>
+
+  <form [formGroup]="orderForm" (ngSubmit)="onSubmit()">
+    <div class="row all-orders">
+
+      <!-- Reject reason -->
+      <div class="col-md-8">
+        <mat-form-field appearance="fill" class="w-100">
+          <mat-label>{{ 'orders.rejection_reason' | translate }}</mat-label>
+          <input formControlName="rejection_reason" matInput
+            placeholder="{{ 'orders.rejection_reason' | translate }}" />
+          <mat-error *ngIf="orderForm.get('rejection_reason')?.hasError('required')">
+            {{ 'orders.rejection_reason' | translate }} {{ 'required' | translate }}
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <!-- File uploader -->
+      <div class="col-md-12">
+        <app-file-uploader [multiple]="false" [chooseLabel]="'orders.add_attachment' | translate"
+          [attachmentFiles]="uploadedFiles" formControlName="rejection_attachment" (onformchange)="onUploadFile($event)"
+          (ondelete)="onDeleteFile($event)">
+        </app-file-uploader>
+      </div>
+
+    </div>
+
+    <div class="d-flex justify-content-center gap-3 mt-4">
+      <button mat-raised-button color="primary" type="submit" [disabled]="orderForm.invalid" class="w-25">
+        {{ 'confirmation.confirm' | translate }}
+      </button>
+
+      <button mat-stroked-button color="warn" type="button" (click)="onCancel()" class="w-25">
+        {{ 'confirmation.cancel' | translate }}
+      </button>
+    </div>
+  </form>
+</section>

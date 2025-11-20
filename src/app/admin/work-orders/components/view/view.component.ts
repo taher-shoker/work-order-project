@@ -7,6 +7,7 @@ import { VerifyCodeComponent } from './verify-code/verify-code.component';
 import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { NgOtpInputComponent } from 'ng-otp-input';
 import { HoldReasonComponent } from './hold-reason/hold-reason.component';
+import { RejectReasonComponent } from './reject-reason/reject-reason.component';
 
 @Component({
   selector: 'app-view',
@@ -37,6 +38,8 @@ export class ViewComponent implements OnInit {
   ngOnInit(): void {
     if (this.orderId) {
       this.getOrderById(+this.orderId);
+      this.getOrderMaterial(+this.orderId);
+      this.getOrderParts(+this.orderId);
     }
     this.route.paramMap.subscribe((params) => {
       const newOrderId = params.get('id');
@@ -61,8 +64,8 @@ export class ViewComponent implements OnInit {
   }
 
   /** 🔹 Fetch materials */
-  private getOrderMaterial(): void {
-    this.workOrdersService.getMaterialByOrderId(107).subscribe({
+  private getOrderMaterial(id: number): void {
+    this.workOrdersService.getMaterialByOrderId(id).subscribe({
       next: (res) => (this.materialTableData = res.data),
       error: (err) =>
         this.toastr.error(err.message, 'Error fetching materials'),
@@ -70,8 +73,8 @@ export class ViewComponent implements OnInit {
   }
 
   /** 🔹 Fetch parts */
-  private getOrderParts(): void {
-    this.workOrdersService.getPartsByOrderId(107).subscribe({
+  private getOrderParts(id: number): void {
+    this.workOrdersService.getPartsByOrderId(id).subscribe({
       next: (res) => (this.spareTableData = res.data),
       error: (err) => this.toastr.error(err.message, 'Error fetching parts'),
     });
@@ -134,7 +137,11 @@ export class ViewComponent implements OnInit {
         break;
 
       case 5:
-        this.updateWorkOrderStatus(orderId, actionId);
+        if (isAdmin) {
+          this.openRejectReasonDialog(orderId, actionId);
+        } else {
+          this.updateWorkOrderStatus(orderId, actionId);
+        }
         break;
 
       case 13:
@@ -176,15 +183,16 @@ export class ViewComponent implements OnInit {
   }
   /** 🔹 Service calls */
   private updateWorkOrderStatus(orderId: number, statusId: number): void {
-    this.workOrdersService
-      .updateStatusOrder(orderId, { status: statusId })
-      .subscribe({
-        next: () => {
-          this.toastr.success(this.getActionMessage(statusId));
-          this.router.navigate(['/dashboard/work-orders']);
-        },
-        error: () => this.toastr.error('Failed to update order'),
-      });
+    const formData = new FormData();
+    formData.append('status', statusId.toString());
+
+    this.workOrdersService.updateStatusOrder(orderId, formData).subscribe({
+      next: () => {
+        this.toastr.success(this.getActionMessage(statusId));
+        this.router.navigate(['/dashboard/work-orders']);
+      },
+      error: () => this.toastr.error('Failed to update order'),
+    });
   }
 
   private openVerifyDialog(orderId: number, statusId: number): void {
@@ -196,18 +204,17 @@ export class ViewComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result) => {
       if (!result?.otp) return;
 
-      this.workOrdersService
-        .updateStatusOrder(orderId, {
-          status: statusId,
-          confirm_code: result.otp,
-        })
-        .subscribe({
-          next: () => {
-            this.toastr.success(this.getActionMessage(statusId));
-            this.router.navigate(['/dashboard/work-orders']);
-          },
-          error: () => this.toastr.error('Failed to verify order'),
-        });
+      const formData = new FormData();
+      formData.append('status', statusId.toString());
+      formData.append('confirm_code', result.otp);
+
+      this.workOrdersService.updateStatusOrder(orderId, formData).subscribe({
+        next: () => {
+          this.toastr.success(this.getActionMessage(statusId));
+          this.router.navigate(['/dashboard/work-orders']);
+        },
+        error: () => this.toastr.error('Failed to verify order'),
+      });
     });
   }
 
@@ -219,16 +226,53 @@ export class ViewComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (!result) return;
+      console.log(result);
+      const formData = new FormData();
+      formData.append('holding_reason', result.holding_reason);
+      formData.append(
+        'used_items_descriptions',
+        result.used_items_descriptions
+      );
+      formData.append('technician_report', result.technician_report);
+      formData.append('status', statusId.toString());
 
-      this.workOrdersService
-        .onHoldOrder(orderId, { status: statusId, ...result })
-        .subscribe({
-          next: () => {
-            this.toastr.success(this.getActionMessage(statusId));
-            this.router.navigate(['/dashboard/work-orders']);
-          },
-          error: () => this.toastr.error('Failed to hold order'),
-        });
+      // Append files (with id if needed)
+      const files: { id: number; file: File }[] =
+        result.pendding_attachment || [];
+      files.forEach((f) => formData.append('pendding_attachment', f.file));
+      this.workOrdersService.updateStatusOrder(orderId, formData).subscribe({
+        next: () => {
+          this.toastr.success(this.getActionMessage(statusId));
+          this.router.navigate(['/dashboard/work-orders']);
+        },
+        error: () => this.toastr.error('Failed to hold order'),
+      });
+    });
+  }
+
+  private openRejectReasonDialog(orderId: number, statusId: number): void {
+    const dialogRef = this.dialog.open(RejectReasonComponent, {
+      width: '50%',
+      disableClose: true,
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (!result) return;
+      const formData = new FormData();
+      formData.append('rejection_reason', result.rejection_reason);
+      formData.append('status', statusId.toString());
+
+      // Append files (with id if needed)
+      const files: { id: number; file: File }[] =
+        result.rejection_attachment || [];
+      files.forEach((f) => formData.append('rejection_attachment', f.file));
+      this.workOrdersService.updateStatusOrder(orderId, formData).subscribe({
+        next: () => {
+          this.toastr.success(this.getActionMessage(statusId));
+          this.router.navigate(['/dashboard/work-orders']);
+        },
+        error: () => this.toastr.error('Failed to hold order'),
+      });
     });
   }
 }

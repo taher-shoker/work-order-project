@@ -28,8 +28,8 @@ export class WorkOrdersService {
   getPartsByOrderId(id: number): Observable<any> {
     return this._HttpClient.get(`work-orders/spare-parts/${id}`);
   }
-  updateStatusOrder(id: number, data: any): Observable<any> {
-    return this._HttpClient.put(`work-orders/${id}/change-status`, data);
+  updateStatusOrder(id: number, formData: FormData): Observable<any> {
+    return this._HttpClient.post(`work-orders/${id}/change-status`, formData);
   }
   onHoldOrder(id: number, data: any): Observable<any> {
     return this._HttpClient.put(`work-orders/update-by-engineer/${id}`, data);
