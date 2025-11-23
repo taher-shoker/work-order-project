@@ -120,6 +120,12 @@
             <p>{{orderData?.source?.name}}</p>
           </div>
         </div>
+        <div class="col-md-4 justify-content-center">
+          <div class="mx-4" *ngIf="orderData?.attachment">
+            <h4> {{'orders.attachment'| translate}} </h4>
+            <img width="120px" height="120px" [src]="orderData?.attachment" alt="">
+          </div>
+        </div>
         <div class="row" *ngIf="orderData?.status.id === 4">
           <div class="col-md-12">
             <h3>{{'orders.holding_title' |translate}} </h3>

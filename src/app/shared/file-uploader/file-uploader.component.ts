@@ -183,6 +183,7 @@ export class FileUploaderComponent implements ControlValueAccessor {
   }
 
   truncateLabelText(label: string) {
+    console.log(label);
     const ext = label.slice(label.lastIndexOf('.'));
     return label.slice(0, 10) + '...' + ext;
   }

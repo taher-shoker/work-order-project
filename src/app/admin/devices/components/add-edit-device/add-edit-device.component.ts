@@ -1,68 +1,165 @@
-import { Component } from '@angular/core';
-import { DevicesService } from '../../services/devices.service';
-import { LookupsService } from 'src/app/services/lookups.service';
-import { ToastrService } from 'ngx-toastr';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { HelperService } from 'src/app/services/helper.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ConfirmDialogComponent } from 'src/app/shared/confirm-dialog/confirm-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { ToastrService } from 'ngx-toastr';
+
+import { DevicesService } from '../../services/devices.service';
+import { ConfirmDialogComponent } from 'src/app/shared/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-add-edit-device',
   templateUrl: './add-edit-device.component.html',
   styleUrls: ['./add-edit-device.component.scss'],
 })
-export class AddEditDeviceComponent {
+export class AddEditDeviceComponent implements OnInit {
   currentLang = localStorage.getItem('lang');
-
-  isUpdatePage: boolean = false;
+  deviceId!: string | null;
+  isUpdatePage = false;
   hideRequiredMarker: boolean = true;
-  deviceId: any;
+
   currentDevice: any;
+  uploadedFiles: any[] = [];
+
+  // Lookup data
   departments: any;
-  departmentId: any;
   devicesModel: any;
-  modelId: any;
   manufacturers: any;
-  manufacturersId: any;
   deviceTypes: any;
-  typeId: any;
-  custodiansList: any;
-  custodiansId: any;
   deviceStatus: any;
-  statusId: any;
-  tableResponse: any | undefined;
-  tableData: any[] | undefined = [];
-  pageSize: number | undefined = 5;
-  page: number | undefined = 1;
-  pageIndex: number = 0;
+  custodiansList: any;
 
   constructor(
-    private _activateRoute: ActivatedRoute,
+    private route: ActivatedRoute,
     private devicesService: DevicesService,
-    private _ToastrService: ToastrService,
-    private _Router: Router,
+    private toastr: ToastrService,
+    private router: Router,
     public dialog: MatDialog
   ) {
-    this.deviceId = this._activateRoute.snapshot.paramMap.get('id');
-    if (this.deviceId) {
-      this.isUpdatePage = true;
-    } else {
-      this.isUpdatePage = false;
-    }
+    this.deviceId = this.route.snapshot.paramMap.get('id');
+    this.isUpdatePage = !!this.deviceId;
   }
 
-  ngOnInit() {
-    this.getDeviceById(this.deviceId);
+  ngOnInit(): void {
+    if (this.isUpdatePage && this.deviceId) {
+      this.getDeviceById(+this.deviceId);
+    }
+
+    this.loadLookups();
     this.getCustodians();
+  }
 
-    // this.getDeviceType('models');
-    // this.getDeviceType('manufacturers');
-    // this.getDeviceType('types');
-    // this.getDeviceType('departments');
-    // this.getDeviceType('statuses');
+  // Form
+  deviceForm = new FormGroup({
+    name_en: new FormControl(null, Validators.required),
+    name_ar: new FormControl(null, Validators.required),
+    description_en: new FormControl(null),
+    description_ar: new FormControl(null),
+    department_id: new FormControl(null, Validators.required),
+    serial_number: new FormControl(null, Validators.required),
+    custodians: new FormControl(null, Validators.required),
+    buy_date: new FormControl(null, Validators.required),
+    type_id: new FormControl(null, Validators.required),
+    company_id: new FormControl(null, Validators.required),
+    warranty_period: new FormControl(null, Validators.required),
+    model_code: new FormControl(null, Validators.required),
+    model_id: new FormControl(null, Validators.required),
+    status: new FormControl(null, Validators.required),
+    image: new FormControl<any[]>([]),
+  });
+  // ---------------------------------------------
+  // SUBMIT FORM
+  // ---------------------------------------------
+  onSubmit(form: FormGroup): void {
+    if (form.invalid) {
+      this.toastr.warning('Please fill all required fields.');
+      return;
+    }
 
+    const formData = new FormData();
+
+    // Append form values (skip image!)
+    Object.entries(form.value).forEach(([key, value]) => {
+      if (key === 'image') return; // prevent duplication
+
+      if (value instanceof Date) {
+        formData.append(key, value.toISOString().slice(0, 10));
+      } else if (value !== null && value !== undefined) {
+        formData.append(key, value as any);
+      }
+    });
+
+    // Append uploaded images properly
+    this.uploadedFiles.forEach((fileObj) => {
+      if (fileObj.file) {
+        console.log(fileObj);
+        formData.append('image', fileObj.file);
+      }
+    });
+
+    // Update
+    if (this.isUpdatePage && this.deviceId) {
+      this.devicesService.onEditDevice(formData, +this.deviceId).subscribe({
+        next: () => this.toastr.success('Device updated successfully'),
+        error: (err) => this.toastr.error(err.message, 'Update failed'),
+        complete: () => this.router.navigate(['/dashboard/devices']),
+      });
+      return;
+    }
+
+    // Add
+    this.devicesService.addNewDevice(formData).subscribe({
+      next: () => this.toastr.success('Device added successfully'),
+      error: (err) => this.toastr.error(err.message, 'Add failed'),
+      complete: () => this.router.navigate(['/dashboard/devices']),
+    });
+  }
+
+  // ---------------------------------------------
+  // LOAD DEVICE DATA
+  // ---------------------------------------------
+  private getDeviceById(id: number): void {
+    this.devicesService.getDevice(id).subscribe((res) => {
+      this.currentDevice = res.data;
+
+      this.deviceForm.patchValue({
+        name_en: res.data?.name,
+        name_ar: res.data?.name,
+        description_en: res.data?.description,
+        description_ar: res.data?.description,
+        department_id: res.data?.department_id,
+        serial_number: res.data?.serial_number,
+        buy_date: res.data?.buy_date,
+        type_id: res.data?.type_id,
+        company_id: res.data?.company_id,
+        warranty_period: res.data?.warranty_period,
+        model_code: res.data?.model_code,
+        model_id: res.data?.model_id,
+        status: res.data?.status,
+      });
+
+      if (typeof res.data?.image === 'string') {
+        const url = res.data?.image;
+        const fileName = url.split('devices/')[1];
+
+        this.uploadedFiles = [
+          {
+            id: fileName, // constant based on filename
+
+            file: {
+              name: fileName,
+            },
+          },
+        ];
+        this.deviceForm.get('image')?.setValue(this.uploadedFiles);
+      }
+    });
+  }
+
+  // ---------------------------------------------
+  // LOOKUPS
+  // ---------------------------------------------
+  private loadLookups(): void {
     this.getDepartment();
     this.getDeviceModel();
     this.getDeviceManufacturers();
@@ -70,153 +167,59 @@ export class AddEditDeviceComponent {
     this.getDeviceStatus();
   }
 
-  deviceForm = new FormGroup({
-    name_en: new FormControl(null, [Validators.required]),
-    name_ar: new FormControl(null, [Validators.required]),
-    description_en: new FormControl(null, [Validators.required]),
-    description_ar: new FormControl(null, [Validators.required]),
-    department_id: new FormControl(null, [Validators.required]),
-    serial_number: new FormControl(null, [Validators.required]),
-    buy_date: new FormControl(null, [Validators.required]),
-    type_id: new FormControl(null, [Validators.required]),
-    company_id: new FormControl(null, [Validators.required]),
-    warranty_period: new FormControl(null, [Validators.required]),
-    model_code: new FormControl(null, [Validators.required]),
-    model_id: new FormControl(null, [Validators.required]),
-    status: new FormControl(null, [Validators.required]),
-  });
-
-  onSubmit(data: FormGroup) {
-    if (this.deviceId) {
-      // Edit Device
-      let myData = new FormData();
-      let myMap = new Map(Object.entries(data.value));
-      for (const [key, value] of myMap) {
-        myData.append(key, data.value[key]);
-      }
-
-      this.devicesService.onEditDevice(data.value, this.deviceId).subscribe({
-        next: (res) => {
-          console.log(data.value);
-          this._ToastrService.success('Device Updated Succesfuly');
-        },
-        error: (err) => {
-          this._ToastrService.error(err.message, 'Error in Update Device');
-        },
-        complete: () => {
-          this._Router.navigate(['/dashboard/devices']);
-        },
-      });
-    } else {
-      // Add new Device
-      let myData = new FormData();
-      let myMap = new Map(Object.entries(data.value));
-      for (const [key, value] of myMap) {
-        myData.append(key, data.value[key]);
-      }
-      myData.append('buy_date', data.value.buy_date.toISOString().slice(0, 10));
-
-      this.devicesService.addNewDevice(myData).subscribe({
-        next: (res) => {
-          // this.data = res
-          // console.log(res.message)
-          this._ToastrService.success('Device Added Succesfuly');
-          this.openConfirm();
-        },
-        error: (err) => {
-          this._ToastrService.error(err.message, 'Error in Add  Device');
-        },
-        complete: () => {
-          this._Router.navigate(['/dashboard/devices']);
-        },
-      });
-    }
-  }
-
-  getDeviceById(id: number) {
-    this.devicesService.getDevice(id).subscribe((res) => {
-      this.currentDevice = res.data;
-      // console.log(this.currentDevice)
-
-      this.deviceForm.patchValue({
-        name_en: this.currentDevice?.name,
-        name_ar: this.currentDevice?.name,
-        description_en: this.currentDevice?.description,
-        description_ar: this.currentDevice?.description,
-        department_id: this.currentDevice?.department_id,
-        serial_number: this.currentDevice?.serial_number,
-        buy_date: this.currentDevice?.buy_date,
-        type_id: this.currentDevice?.type_id,
-        company_id: this.currentDevice?.company_id,
-        warranty_period: this.currentDevice?.warranty_period,
-        model_code: this.currentDevice?.model_code,
-        model_id: this.currentDevice?.model_id,
-        status: this.currentDevice?.status,
-      });
-    });
-  }
-
-  // Confirm
-  openConfirm() {
-    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      width: '40%',
-    });
-  }
-
-  // getDeviceType(data: any): void {
-  //   this.devicesService.onGetDeviceType(data).subscribe({
-  //     next: (res) => {
-  //       console.log(res);
-  //       this.departments = res.data;
-  //       this.devicesModel = res.data;
-  //       this.manufacturers = res.data;
-  //       this.deviceTypes = res.data;
-  //       this.deviceStatus = res.data;
-  //     }
-  //   })
-  // }
-
-  getCustodians() {
-    this.devicesService.onGetCustodians().subscribe({
-      next: (res) => {
-        this.custodiansList = res.data;
-        console.log(this.custodiansList);
-      },
-    });
-  }
-
-  getDepartment() {
+  private getDepartment(): void {
     this.devicesService.onGetDepartment().subscribe((res) => {
       this.departments = res.data;
     });
   }
-  getDeviceModel() {
-    this.devicesService.onGetDeviceModel().subscribe({
-      next: (res) => {
-        this.devicesModel = res.data;
-      },
-    });
-  }
-  getDeviceManufacturers() {
-    this.devicesService.onGetDeviceManufacturers().subscribe({
-      next: (res) => {
-        this.manufacturers = res.data;
-      },
-    });
-  }
-  getDeviceTypes() {
-    this.devicesService.onGetDeviceType().subscribe({
-      next: (res) => {
-        this.deviceTypes = res.data;
-      },
+
+  private getDeviceModel(): void {
+    this.devicesService.onGetDeviceModel().subscribe((res) => {
+      this.devicesModel = res.data;
     });
   }
 
-  getDeviceStatus() {
-    this.devicesService.onGetDeviceStatus().subscribe({
-      next: (res) => {
-        this.deviceStatus = res.data;
-      },
+  private getDeviceManufacturers(): void {
+    this.devicesService.onGetDeviceManufacturers().subscribe((res) => {
+      this.manufacturers = res.data;
     });
+  }
+
+  private getDeviceTypes(): void {
+    this.devicesService.onGetDeviceType().subscribe((res) => {
+      this.deviceTypes = res.data;
+    });
+  }
+
+  private getDeviceStatus(): void {
+    this.devicesService.onGetDeviceStatus().subscribe((res) => {
+      this.deviceStatus = res.data;
+    });
+  }
+
+  private getCustodians(): void {
+    this.devicesService.onGetCustodians().subscribe((res) => {
+      this.custodiansList = res.data;
+    });
+  }
+
+  // ---------------------------------------------
+  // FILE UPLOAD HANDLERS
+  // ---------------------------------------------
+  onUploadFile(files: any[]): void {
+    this.uploadedFiles = files;
+    this.deviceForm.get('image')?.setValue(files);
+  }
+
+  onDeleteFile(id: number): void {
+    this.uploadedFiles = this.uploadedFiles.filter((f) => f.id !== id);
+    this.deviceForm.get('image')?.setValue(this.uploadedFiles);
+  }
+
+  // ---------------------------------------------
+  // CONFIRM DIALOG
+  // ---------------------------------------------
+  openConfirm(): void {
+    this.dialog.open(ConfirmDialogComponent, { width: '40%' });
   }
 }

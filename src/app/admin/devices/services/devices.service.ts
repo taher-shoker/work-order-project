@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class DevicesService {
-  constructor(private _HttpClient: HttpClient) { }
+  constructor(private _HttpClient: HttpClient) {}
 
   addNewDevice(data: any): Observable<any> {
     return this._HttpClient.post('devices/create', data);
@@ -20,8 +20,9 @@ export class DevicesService {
   getDevice(id: number): Observable<any> {
     return this._HttpClient.get(`devices/show/${id}`);
   }
-  onEditDevice(data: any, id: number): Observable<any> {
-    return this._HttpClient.put(`devices/update/${id}`, data);
+
+  onEditDevice(body: FormData, id: number): Observable<any> {
+    return this._HttpClient.put(`devices/update/${id}`, body);
   }
   getDeviceWorkOrder(id: number): Observable<any> {
     return this._HttpClient.get(`work-orders/orders_by_device/${id}`);

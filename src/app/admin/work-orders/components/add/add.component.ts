@@ -1,6 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  Validators,
+  NonNullableFormBuilder,
+} from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 
 import { WorkOrdersService } from '../../services/work-orders.service';
@@ -9,35 +14,10 @@ import { HelperService } from 'src/app/services/helper.service';
 import { DevicesService } from 'src/app/admin/devices/services/devices.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 
-// ✅ Strongly typed interfaces
+// Lookup interfaces
 interface LookupItem {
   id: number;
   name: string;
-}
-
-interface Device {
-  id: number;
-  name: string;
-  serial_number?: string;
-}
-
-interface WorkOrder {
-  start_date: string;
-  start_time: string;
-  department_id: number;
-  engineer_id: number;
-  technician_id: number;
-  work_type_id: number;
-  building_id: number;
-  floor_no: string;
-  room_no: string;
-  source_id: number;
-  customer_name: string;
-  customer_phone: string;
-  equipment_id: number;
-  description: string;
-  priority: string;
-  type: string;
 }
 
 @Component({
@@ -46,16 +26,18 @@ interface WorkOrder {
   styleUrls: ['./add.component.scss'],
 })
 export class AddComponent implements OnInit {
-  // Flags
+  // flags
   isUpdatePage = false;
 
-  // IDs & current data
+  // Route params
   orderId: string | null = null;
   deviceId: string | null = null;
-  currentOrder: any = null;
-  deviceData: any | null = null;
 
-  // Lookup data
+  // data
+  currentOrder: any = null;
+  deviceData: any = null;
+
+  // lookups
   workTypes: LookupItem[] = [];
   buildings: LookupItem[] = [];
   equipments: LookupItem[] = [];
@@ -65,15 +47,13 @@ export class AddComponent implements OnInit {
   engineers: LookupItem[] = [];
   technicians: LookupItem[] = [];
 
-  // Devices
+  // devices
   devices: any[] = [];
   pageSize = 5;
   page = 1;
-
-  // UI helpers
-  hide = true;
-  confirmHide = true;
   hideRequiredMarker = true;
+
+  uploadedFiles: any[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -83,37 +63,51 @@ export class AddComponent implements OnInit {
     private toastr: ToastrService,
     private helperService: HelperService,
     private devicesService: DevicesService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private fb: NonNullableFormBuilder
   ) {
     this.deviceId = this.route.snapshot.paramMap.get('deviceId');
     this.orderId = this.route.snapshot.paramMap.get('id');
     this.isUpdatePage = !!this.orderId || !!this.deviceId;
-    console.log(this.deviceId, this.orderId);
   }
 
-  // ✅ Reactive form
-  orderForm = new FormGroup({
+  // ----------------------------
+  // FORM
+  // ----------------------------
+
+  orderForm = this.fb.group({
     start_date: new FormControl<Date | null>(null),
-    start_time: new FormControl<string>(
+    start_time: this.fb.control(
       new Date().toTimeString().split(' ')[0],
-      [Validators.required]
+      Validators.required
     ),
-    department_id: new FormControl<number | null>(null, [Validators.required]),
-    engineer_id: new FormControl<number | null>(null, [Validators.required]),
-    technician_id: new FormControl<number | null>(null, [Validators.required]),
-    work_type_id: new FormControl<number | null>(null, [Validators.required]),
-    building_id: new FormControl<number | null>(null, [Validators.required]),
-    floor_no: new FormControl<string | null>(null, [Validators.required]),
-    room_no: new FormControl<string | null>(null, [Validators.required]),
-    source_id: new FormControl<number | null>(null, [Validators.required]),
-    customer_name: new FormControl<string | null>(null, [Validators.required]),
-    customer_phone: new FormControl<string | null>(null, [Validators.required]),
-    equipment_id: new FormControl<number | null>(null, [Validators.required]),
-    description: new FormControl<string | null>(null, [Validators.required]),
-    priority: new FormControl<string>('high', [Validators.required]),
-    type: new FormControl<string>('maintenance', [Validators.required]),
+
+    department_id: this.fb.control<number | null>(null, Validators.required),
+    engineer_id: this.fb.control<number | null>(null, Validators.required),
+    technician_id: this.fb.control<number | null>(null, Validators.required),
+
+    work_type_id: this.fb.control<number | null>(null, Validators.required),
+    building_id: this.fb.control<number | null>(null, Validators.required),
+
+    floor_no: this.fb.control<string | null>(null, Validators.required),
+    room_no: this.fb.control<string | null>(null, Validators.required),
+
+    source_id: this.fb.control<number | null>(null, Validators.required),
+    customer_name: this.fb.control<string | null>(null, Validators.required),
+    customer_phone: this.fb.control<string | null>(null, Validators.required),
+
+    equipment_id: this.fb.control<number | null>(null, Validators.required),
+    description: this.fb.control<string | null>(null, Validators.required),
+
+    priority: this.fb.control('high', Validators.required),
+    type: this.fb.control('maintenance', Validators.required),
+
+    attachment: this.fb.control<any[]>([]),
   });
 
+  // ----------------------------------------------------
+  // INIT
+  // ----------------------------------------------------
   ngOnInit(): void {
     if (this.orderId) this.getOrderById(this.orderId);
     if (this.deviceId) this.getDeviceById(this.deviceId);
@@ -121,81 +115,81 @@ export class AddComponent implements OnInit {
     this.loadLookups();
     this.loadDevices();
 
-    // React to department changes
-    this.orderForm.get('department_id')?.valueChanges.subscribe((deptId) => {
-      if (deptId) {
-        console.log(deptId);
-        this.loadEngineers(deptId);
-        this.loadTechnicians(deptId);
+    // auto-load engineers & technicians when department changes
+    this.orderForm.get('department_id')?.valueChanges.subscribe((id) => {
+      if (id) {
+        this.loadEngineers(id);
+        this.loadTechnicians(id);
       }
     });
   }
 
-  // ✅ Submit form
+  // ----------------------------------------------------
+  // SUBMIT
+  // ----------------------------------------------------
   onSubmit(form: FormGroup): void {
     if (form.invalid) {
-      this.toastr.warning('Please fill all required fields correctly.');
+      this.toastr.warning('Please fill all required fields.');
       return;
     }
 
-    const values = form.value;
     const formData = new FormData();
+    const values = form.value;
 
     Object.entries(values).forEach(([key, value]) => {
       if (value !== null && value !== undefined) {
         if (key === 'start_date' && value instanceof Date) {
           formData.append(key, value.toISOString().slice(0, 10));
-        } else {
+        } else if (key !== 'attachment') {
           formData.append(key, value.toString());
         }
       }
     });
 
-    if (this.isUpdatePage && this.orderId && this.deviceId) {
+    // files
+    this.uploadedFiles.forEach((x) => formData.append('attachment', x.file));
+
+    if (this.isUpdatePage && this.orderId) {
       this.updateOrder(formData);
     } else {
       this.addNewOrder(formData);
     }
   }
 
-  // ✅ Add new work order
+  // ----------------------------------------------------
+  // CREATE
+  // ----------------------------------------------------
   private addNewOrder(formData: FormData): void {
     this.workOrdersService.addNewOrder(formData).subscribe({
-      next: (res) => {
+      next: () => {
         this.toastr.success('Work order added successfully');
-        setTimeout(
-          () => this.router.navigate(['/dashboard/work-orders']),
-          1200
-        );
+        this.router.navigate(['/dashboard/work-orders']);
       },
-      error: (err) => {
-        this.toastr.error(err.message, 'Error adding work order');
-      },
+      error: (err) => this.toastr.error(err.error?.message || 'Error'),
     });
   }
 
-  // ✅ Update existing work order
+  // ----------------------------------------------------
+  // UPDATE
+  // ----------------------------------------------------
   private updateOrder(formData: FormData): void {
     this.workOrdersService.editOrder(formData, +this.orderId!).subscribe({
       next: () => {
         this.toastr.success('Work order updated successfully');
-        setTimeout(
-          () => this.router.navigate(['/dashboard/work-orders']),
-          1200
-        );
+        this.router.navigate(['/dashboard/work-orders']);
       },
-      error: (err) => {
-        this.toastr.error(err.message, 'Error updating work order');
-      },
+      error: (err) => this.toastr.error(err.error?.message || 'Error'),
     });
   }
 
-  // ✅ Get single order by ID
+  // ----------------------------------------------------
+  // LOAD ORDER
+  // ----------------------------------------------------
   private getOrderById(id: string): void {
     this.workOrdersService.getOrder(+id).subscribe({
       next: (res) => {
-        this.currentOrder = res.data;
-        const o = this.currentOrder;
+        const o = res.data;
+        this.currentOrder = o;
 
         this.orderForm.patchValue({
           start_date: o?.start_date ? new Date(o.start_date) : null,
@@ -211,25 +205,30 @@ export class AddComponent implements OnInit {
           description: o?.description,
         });
       },
-      error: (err) => {
-        this.toastr.error(err.message, 'Error fetching order details');
-      },
+      error: () => this.toastr.error('Failed to load order details'),
     });
   }
+
+  // ----------------------------------------------------
+  // LOAD DEVICE
+  // ----------------------------------------------------
   private getDeviceById(id: string): void {
     this.devicesService.getDevice(+id).subscribe({
       next: (res) => {
-        this.deviceData = res.data;
-        const o = this.deviceData;
+        const o = res.data;
+        this.deviceData = o;
+
         this.orderForm.patchValue({
           department_id: o?.department?.id,
         });
       },
-      error: (err) => this.toastr.error(err.message, 'Error loading device'),
+      error: () => this.toastr.error('Failed to load device'),
     });
   }
 
-  // ✅ Lookup methods
+  // ----------------------------------------------------
+  // LOOKUPS
+  // ----------------------------------------------------
   private loadLookups(): void {
     this.lookupsService
       .getWork_type()
@@ -250,41 +249,40 @@ export class AddComponent implements OnInit {
       .getDepartment()
       .subscribe((res) => (this.departments = res.data));
   }
-  onselectDepartment(event: any) {
-    //this.supervisor = 'ssss';
-    // this.engineers(this.departmentId);
-    //this.technicians(this.departmentId);
-    console.log(event);
-    //this.loadEngineers();
-  }
 
-  private loadEngineers(deptId: number): void {
-    this.helperService.getEngineers(deptId).subscribe({
-      next: (res) => {
-        this.engineers = res.data;
-        this.spinner.hide();
-      },
-      error: (err) => {
-        console.error('Error loading engineers:', err);
-      },
-      complete: () => {
-        console.log('Engineers loaded successfully.');
-      },
-    });
-  }
-
-  private loadTechnicians(deptId: number): void {
+  private loadEngineers(id: number): void {
     this.helperService
-      .getTechnicians(deptId)
+      .getEngineers(id)
+      .subscribe((res) => (this.engineers = res.data));
+  }
+
+  private loadTechnicians(id: number): void {
+    this.helperService
+      .getTechnicians(id)
       .subscribe((res) => (this.technicians = res.data));
   }
 
-  // ✅ Devices
+  // ----------------------------------------------------
+  // DEVICES
+  // ----------------------------------------------------
   private loadDevices(): void {
     const params = { page_size: this.pageSize, page: this.page };
     this.devicesService.getAllDevices(params).subscribe({
       next: (res) => (this.devices = res.data),
-      error: (err) => this.toastr.error(err.message, 'Error loading devices'),
+      error: () => this.toastr.error('Failed to load devices'),
     });
+  }
+
+  // ----------------------------------------------------
+  // FILE UPLOAD
+  // ----------------------------------------------------
+  onUploadFile(files: any[]) {
+    this.uploadedFiles = files;
+    this.orderForm.get('attachment')?.setValue(this.uploadedFiles);
+  }
+
+  onDeleteFile(id: number) {
+    this.uploadedFiles = this.uploadedFiles.filter((x) => x.id !== id);
+    this.orderForm.get('attachment')?.setValue(this.uploadedFiles);
   }
 }
