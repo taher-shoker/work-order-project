@@ -286,7 +286,8 @@
     "cancel": "Cancel",
     "enter_device_type": "Enter the device type.",
     "enter_model": "Enter the model/template.",
-    "enter_manufacturer": "Enter the manufacturer."
+    "enter_manufacturer": "Enter the manufacturer.",
+    "print":"Reprint QR Code"
   },
   "status": {
     "new": "New",

@@ -325,7 +325,8 @@
     "enter_manufacturer": "اكتب الشركة المصنعة",
     "delete_item": "حذف هذا العنصر",
     "sure_delete": "هل أنت متأكد من الحذف",
-    "delete": "حذف"
+    "delete": "حذف",
+    "print":" إعادة طباعة ال QR"
   },
   "status": {
     "new": "جديد",

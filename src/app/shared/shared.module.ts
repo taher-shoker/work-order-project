@@ -24,6 +24,7 @@ import { TimeAgoPipe } from '../services/time-ago.pipe';
 import { NgxIntlTelInputModule } from 'ngx-intl-tel-input';
 import { FileUploaderComponent } from './file-uploader/file-uploader.component';
 import { RejectReasonComponent } from '../admin/work-orders/components/view/reject-reason/reject-reason.component';
+import { NgxPrintModule } from 'ngx-print';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -55,6 +56,7 @@ export function createTranslateLoader(http: HttpClient) {
     TranslateModule,
     NgOtpInputComponent,
     NgxIntlTelInputModule,
+    NgxPrintModule,
   ],
   exports: [
     CommonModule,
@@ -71,6 +73,7 @@ export function createTranslateLoader(http: HttpClient) {
     TimeAgoPipe,
     NgxIntlTelInputModule,
     FileUploaderComponent,
+    NgxPrintModule,
   ],
 })
 export class SharedModule {}
