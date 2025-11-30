@@ -10,19 +10,22 @@ import { DeleteItemComponent } from 'src/app/shared/delete-item/delete-item.comp
 @Component({
   selector: 'app-device-model',
   templateUrl: './device-model.component.html',
-  styleUrls: ['./device-model.component.scss']
+  styleUrls: ['./device-model.component.scss'],
 })
 export class DeviceModelComponent implements OnInit {
-
   currentLang = localStorage.getItem('lang');
 
   deviceModels: any[] = [];
+  filteredList: any[] = [];
   deviceModelsId: any;
   selectedModel: string | null = null;
+  searchValue: string = '';
 
-  constructor(private deviceModelService: DeviceModelService,
+  constructor(
+    private deviceModelService: DeviceModelService,
     private toastrService: ToastrService,
-    public dialog: MatDialog) { }
+    public dialog: MatDialog
+  ) {}
 
   ngOnInit(): void {
     this.allDeviceModels();
@@ -32,19 +35,30 @@ export class DeviceModelComponent implements OnInit {
     this.deviceModelService.getAllDeviceModel().subscribe({
       next: (res) => {
         this.deviceModels = res.data;
-      }
-    })
+        this.filteredList = res.data;
+      },
+    });
+  }
+  // filetr
+  filter(keyword: string) {
+    const search = keyword.toLowerCase();
+
+    this.filteredList = this.deviceModels.filter(
+      (item) =>
+        item.name_en?.toLowerCase().includes(search) ||
+        item.name_ar?.includes(keyword)
+    );
   }
 
   // add device model
   openAddDeviceModel() {
     const dialogRef = this.dialog.open(AddDeviceModelComponent, {
       width: '40%',
-      data: this.deviceModels
+      data: this.deviceModels,
     });
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.addDeviceModels(result)
+        this.addDeviceModels(result);
       }
     });
   }
@@ -58,20 +72,20 @@ export class DeviceModelComponent implements OnInit {
         this.toastrService.error(err.message, 'Error in Added Model');
       },
       complete: () => {
-        this.allDeviceModels()
-      }
-    })
+        this.allDeviceModels();
+      },
+    });
   }
 
   // edit device model
   openEditDeviceModel(id: any) {
     const dialogRef = this.dialog.open(EditDeviceModelComponent, {
       width: '40%',
-      data: id
+      data: id,
     });
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.editDeviceModel(result, id)
+        this.editDeviceModel(result, id);
       }
     });
   }
@@ -85,20 +99,20 @@ export class DeviceModelComponent implements OnInit {
         this.toastrService.error(err.message, 'Error in Update Model');
       },
       complete: () => {
-        this.allDeviceModels()
-      }
-    })
+        this.allDeviceModels();
+      },
+    });
   }
 
   //  delete device model
   openDeleteManufacturer(data: any): void {
     const dialogRef = this.dialog.open(DeleteItemComponent, {
       data: data,
-      width: '40%'
+      width: '40%',
     });
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.deleteModel(result.id)
+        this.deleteModel(result.id);
       }
     });
   }
@@ -109,9 +123,8 @@ export class DeviceModelComponent implements OnInit {
         this.allDeviceModels();
       },
       error: (err) => {
-        this.toastrService.error(err.error.message)
-      }
-    })
+        this.toastrService.error(err.error.message);
+      },
+    });
   }
-
 }

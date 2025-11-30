@@ -11,19 +11,23 @@ import { DeleteItemComponent } from 'src/app/shared/delete-item/delete-item.comp
 @Component({
   selector: 'app-manufacturers',
   templateUrl: './manufacturers.component.html',
-  styleUrls: ['./manufacturers.component.scss']
+  styleUrls: ['./manufacturers.component.scss'],
 })
 export class ManufacturersComponent implements OnInit {
-
   currentLang = localStorage.getItem('lang');
 
   companies: any[] = [];
+  filteredList: any[] = [];
   ManufacturersId: any;
   selectedCompany: string | null = null;
+  searchValue: string = '';
 
-  constructor(private manufacturersService: ManufacturersService,
-    private activatedRoute: ActivatedRoute, private toastrService: ToastrService,
-    public dialog: MatDialog) {
+  constructor(
+    private manufacturersService: ManufacturersService,
+    private activatedRoute: ActivatedRoute,
+    private toastrService: ToastrService,
+    public dialog: MatDialog
+  ) {
     this.ManufacturersId = activatedRoute.snapshot.paramMap.get('id');
     console.log(this.ManufacturersId);
   }
@@ -37,24 +41,35 @@ export class ManufacturersComponent implements OnInit {
       next: (res) => {
         console.log(res);
         this.companies = res.data;
-      }
-    })
+        this.filteredList = res.data;
+      },
+    });
+  }
+  // filetr
+  filterManufacturers(keyword: string) {
+    const search = keyword.toLowerCase();
+
+    this.filteredList = this.companies.filter(
+      (item) =>
+        item.name_en?.toLowerCase().includes(search) ||
+        item.name_ar?.includes(keyword)
+    );
   }
 
   // add manufacturer
   openAddManufacturer() {
     const dialogRef = this.dialog.open(AddCompanyComponent, {
       width: '40%',
-      data: this.companies
+      data: this.companies,
     });
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.Manufacturers(result)
+        this.addManufacturers(result);
       }
     });
   }
 
-  Manufacturers(data: FormGroup) {
+  addManufacturers(data: FormGroup) {
     this.manufacturersService.addManufacturers(data.value).subscribe({
       next: (res) => {
         this.toastrService.success(res.message, 'Company Added Succesfuly');
@@ -63,20 +78,20 @@ export class ManufacturersComponent implements OnInit {
         this.toastrService.error(err.message, 'Error in Added Company');
       },
       complete: () => {
-        this.allManufacturers()
-      }
-    })
+        this.allManufacturers();
+      },
+    });
   }
 
   // edit manufacturer
   openEditManufacturer(id: any) {
     const dialogRef = this.dialog.open(EditCompanyComponent, {
       width: '40%',
-      data: id
+      data: id,
     });
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.editManufacturers(result, id)
+        this.editManufacturers(result, id);
       }
     });
   }
@@ -90,20 +105,20 @@ export class ManufacturersComponent implements OnInit {
         this.toastrService.error(err.message, 'Error in Update Company');
       },
       complete: () => {
-        this.allManufacturers()
-      }
-    })
+        this.allManufacturers();
+      },
+    });
   }
 
   //  delete manufacturer
   openDeleteManufacturer(data: any): void {
     const dialogRef = this.dialog.open(DeleteItemComponent, {
       data: data,
-      width: '40%'
+      width: '40%',
     });
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.deleteCompany(result.id)
+        this.deleteCompany(result.id);
       }
     });
   }
@@ -114,9 +129,8 @@ export class ManufacturersComponent implements OnInit {
         this.allManufacturers();
       },
       error: (err) => {
-        this.toastrService.error(err.error.message)
-      }
-    })
+        this.toastrService.error(err.error.message);
+      },
+    });
   }
-
 }

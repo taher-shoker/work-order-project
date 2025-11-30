@@ -5,24 +5,22 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { UsersService } from 'src/app/admin/services/users.service';
 import { AuthService } from 'src/app/auth/services/auth.service';
-import { ConfirmDialogComponent } from 'src/app/shared/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-add-edit-user',
   templateUrl: './add-edit-user.component.html',
-  styleUrls: ['./add-edit-user.component.scss']
+  styleUrls: ['./add-edit-user.component.scss'],
 })
 export class AddEditUserComponent {
   userId: any;
-  titles: any;
-  currentUser: any;
-  departments: any;
   departmentId: any;
+  currentUser: any;
+  titles: any;
+  departments: any;
   hide: boolean = true;
   hideConfirm: boolean = true;
   hideRequiredMarker: boolean = true;
   isUpdatePage: boolean = false;
-  data: any;
 
   constructor(
     private _activateRoute: ActivatedRoute,
@@ -30,9 +28,11 @@ export class AddEditUserComponent {
     private _UsersService: UsersService,
     private _ToastrService: ToastrService,
     private _Router: Router,
-    public _MatDialog: MatDialog,
+    public _MatDialog: MatDialog
   ) {
-    this.userId = this._activateRoute.snapshot.paramMap.get('id')
+    this.userId = this._activateRoute.snapshot.paramMap.get('id');
+    console.log(this.userId);
+
     if (this.userId) {
       this.isUpdatePage = true;
     } else {
@@ -42,23 +42,34 @@ export class AddEditUserComponent {
 
   ngOnInit() {
     this.getTitles();
+    this.getDepartments();
     if (this.userId) {
       this.getCurrentUserById(this.userId);
-      this.getDepartments();
     }
   }
   userForm = new FormGroup(
     {
-      name: new FormControl(null, [Validators.required,]),
-      title_id: new FormControl(null, [Validators.required,]),
-      user_name: new FormControl(null, [Validators.required, Validators.pattern(/^[a-zA-z]{3,10}[0-9]{1,5}$/)]),
-      email: new FormControl(null, [Validators.required, Validators.pattern(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/)]),
-      mobile: new FormControl(null, [Validators.required, Validators.minLength(11), Validators.maxLength(13)]),
-      // account_type: new FormControl(null),
-      // department_id: new FormControl(null),
-      // profileImage: new FormControl(null),
-      password: new FormControl(null, [Validators.required, Validators.minLength(3)]),
-      password_confirmation: new FormControl(null, [Validators.required])
+      name: new FormControl(null, [Validators.required]),
+      title_id: new FormControl(null, [Validators.required]),
+      user_name: new FormControl(null, [
+        Validators.required,
+        Validators.pattern(/^[a-zA-z]{3,10}[0-9]{1,5}$/),
+      ]),
+      email: new FormControl(null, [
+        Validators.required,
+        Validators.pattern(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/),
+      ]),
+      mobile: new FormControl(null, [
+        Validators.required,
+        Validators.minLength(11),
+        Validators.maxLength(13),
+      ]),
+      department_id: new FormControl(null, [Validators.required]),
+      password: new FormControl(null, [
+        Validators.required,
+        Validators.minLength(3),
+      ]),
+      password_confirmation: new FormControl(null, [Validators.required]),
     },
     {
       validators: this.matchPasswords,
@@ -88,7 +99,7 @@ export class AddEditUserComponent {
       // }
       this._UsersService.onEditUser(data.value, this.userId).subscribe({
         next: (res) => {
-          console.log(data.value)
+          console.log(data.value);
           this._ToastrService.success('User Updated Succesfuly');
         },
         error: (err) => {
@@ -96,9 +107,8 @@ export class AddEditUserComponent {
         },
         complete: () => {
           this._Router.navigate(['/dashboard/users']);
-        }
-      })
-
+        },
+      });
     } else {
       // Add new User
       // let myData = new FormData();
@@ -108,61 +118,56 @@ export class AddEditUserComponent {
       // }
       this._AuthService.onRegister(data.value).subscribe({
         next: (res) => {
-          this.data = res;
-          console.log(res);
-          this._ToastrService.success(res.data.email, 'Check yor Email to Verify');
+          this._ToastrService.success(
+            res.data.email,
+            'Check yor Email to Verify'
+          );
         },
         error: (err) => {
           console.log(err);
-          this._ToastrService.error(err.message, 'Error in Adding a new user to the system');
+          this._ToastrService.error(
+            err.message,
+            'Error in Adding a new user to the system'
+          );
         },
         complete: () => {
           this._Router.navigate(['/dashboard/users']);
-        }
+        },
       });
     }
   }
 
   getCurrentUserById(id: number) {
-    this._UsersService.getUser(id).subscribe(
-      (res) => {
-        this.currentUser = res.data
-        // this.userType = this.currentUser.account_type
-        // this.titles = this.currentUser.title
-        this.departmentId = this.currentUser.department.id
+    this._UsersService.getUser(id).subscribe((res) => {
+      this.currentUser = res.data;
+      // this.userType = this.currentUser.account_type
+      // this.titles = this.currentUser.title
+      this.departmentId = this.currentUser.department.id;
 
-        console.log(this.currentUser);
+      console.log(this.currentUser);
 
-        this.userForm.patchValue({
-          name: this.currentUser?.name,
-          title_id: this.currentUser?.title?.id,
-          email: this.currentUser?.email,
-          // account_type: this.currentUser.account_type,
-          user_name: this.currentUser?.user_name,
-          mobile: this.currentUser?.mobile,
-          password: this.currentUser?.password,
-          password_confirmation: this.currentUser?.password_confirmation,
-          // department_id: this.currentUser.department?.id,
-        })
-
-      })
+      this.userForm.patchValue({
+        name: this.currentUser?.name,
+        title_id: this.currentUser?.title?.id,
+        email: this.currentUser?.email,
+        user_name: this.currentUser?.user_name,
+        mobile: this.currentUser?.mobile,
+        password: this.currentUser?.password,
+        password_confirmation: this.currentUser?.password_confirmation,
+        department_id: this.currentUser.department?.id,
+      });
+    });
   }
 
   getTitles() {
-    this._UsersService.onGetAccountType().subscribe(
-      (res) => {
-        this.titles = res.data;
-        // console.log(this.titles);
-      }
-    )
+    this._UsersService.onGetAccountType().subscribe((res) => {
+      this.titles = res.data;
+    });
   }
   getDepartments() {
-    this._UsersService.onGetDepartment().subscribe(
-      (res) => {
-        this.departments = res.data;
-        console.log(this.departments);
-      }
-    )
+    this._UsersService.onGetDepartment().subscribe((res) => {
+      this.departments = res.data;
+    });
   }
 
 }

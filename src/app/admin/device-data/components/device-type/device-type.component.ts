@@ -10,19 +10,22 @@ import { DeleteItemComponent } from 'src/app/shared/delete-item/delete-item.comp
 @Component({
   selector: 'app-device-type',
   templateUrl: './device-type.component.html',
-  styleUrls: ['./device-type.component.scss']
+  styleUrls: ['./device-type.component.scss'],
 })
 export class DeviceTypeComponent implements OnInit {
-
   currentLang = localStorage.getItem('lang');
 
   deviceTypes: any[] = [];
+  filteredList: any[] = [];
   deviceTypesId: any;
   selectedType: string | null = null;
+  searchValue: string = '';
 
-  constructor(private deviceTypeService: DeviceTypeService,
+  constructor(
+    private deviceTypeService: DeviceTypeService,
     private toastrService: ToastrService,
-    public dialog: MatDialog) { }
+    public dialog: MatDialog
+  ) {}
 
   ngOnInit(): void {
     this.allDeviceTypes();
@@ -32,19 +35,30 @@ export class DeviceTypeComponent implements OnInit {
     this.deviceTypeService.getAllDeviceType().subscribe({
       next: (res) => {
         this.deviceTypes = res.data;
-      }
-    })
+        this.filteredList = res.data;
+      },
+    });
+  }
+  // filetr
+  filter(keyword: string) {
+    const search = keyword.toLowerCase();
+
+    this.filteredList = this.deviceTypes.filter(
+      (item) =>
+        item.name_en?.toLowerCase().includes(search) ||
+        item.name_ar?.includes(keyword)
+    );
   }
 
   // add device Type
   openAddDeviceType() {
     const dialogRef = this.dialog.open(AddDeviceTypeComponent, {
       width: '40%',
-      data: this.deviceTypes
+      data: this.deviceTypes,
     });
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.addDeviceType(result)
+        this.addDeviceType(result);
       }
     });
   }
@@ -58,20 +72,20 @@ export class DeviceTypeComponent implements OnInit {
         this.toastrService.error(err.message, 'Error in Added Device Type');
       },
       complete: () => {
-        this.allDeviceTypes()
-      }
-    })
+        this.allDeviceTypes();
+      },
+    });
   }
 
   // edit device Type
   openEditDeviceType(id: any) {
     const dialogRef = this.dialog.open(EditDeviceTypeComponent, {
       width: '40%',
-      data: id
+      data: id,
     });
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.editDeviceType(result, id)
+        this.editDeviceType(result, id);
       }
     });
   }
@@ -79,26 +93,29 @@ export class DeviceTypeComponent implements OnInit {
   editDeviceType(data: FormGroup, id: string) {
     this.deviceTypeService.updateDeviceType(data.value, id).subscribe({
       next: (res) => {
-        this.toastrService.success(res.message, 'Device Type Update Succesfuly');
+        this.toastrService.success(
+          res.message,
+          'Device Type Update Succesfuly'
+        );
       },
       error: (err) => {
         this.toastrService.error(err.message, 'Error in Update Device Type');
       },
       complete: () => {
-        this.allDeviceTypes()
-      }
-    })
+        this.allDeviceTypes();
+      },
+    });
   }
 
   //  delete device Type
   openDeleteDeviceType(data: any): void {
     const dialogRef = this.dialog.open(DeleteItemComponent, {
       data: data,
-      width: '40%'
+      width: '40%',
     });
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.deleteType(result.id)
+        this.deleteType(result.id);
       }
     });
   }
@@ -109,10 +126,8 @@ export class DeviceTypeComponent implements OnInit {
         this.allDeviceTypes();
       },
       error: (err) => {
-        this.toastrService.error(err.error.message)
-      }
-    })
+        this.toastrService.error(err.error.message);
+      },
+    });
   }
-
-
 }
